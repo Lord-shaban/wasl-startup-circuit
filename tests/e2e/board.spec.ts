@@ -1,5 +1,7 @@
 import { expect, test } from '@playwright/test'
 
+test.use({ locale: 'en-US' })
+
 for (const viewport of [{ width: 1280, height: 720 }, { width: 800, height: 600 }]) {
   test(`board pointer alignment at ${viewport.width}x${viewport.height}`, async ({ page }) => {
     const errors: string[] = []

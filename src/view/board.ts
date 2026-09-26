@@ -7,8 +7,11 @@ import {
   type Cell,
   type Point,
 } from './camera'
+import { PrototypeGraphics, type PrototypeGraphicsState } from './prototype-graphics'
 
 export interface BoardView {
+  clientToCell(clientX: number, clientY: number): Cell | null
+  updatePrototype(state: PrototypeGraphicsState): void
   destroy(): void
 }
 
@@ -32,18 +35,19 @@ function drawGrid(): Graphics {
   return grid
 }
 
-function pointInCanvas(event: MouseEvent, canvas: HTMLCanvasElement): Point {
+function pointInCanvas(clientX: number, clientY: number, canvas: HTMLCanvasElement): Point {
   const rect = canvas.getBoundingClientRect()
   return {
-    x: ((event.clientX - rect.left) / rect.width) * canvas.clientWidth,
-    y: ((event.clientY - rect.top) / rect.height) * canvas.clientHeight,
+    x: ((clientX - rect.left) / rect.width) * canvas.clientWidth,
+    y: ((clientY - rect.top) / rect.height) * canvas.clientHeight,
   }
 }
 
-/** A rendering and coordinate shell. Gameplay entities are added in M2. */
 export async function createBoard(
   host: HTMLElement,
   onPointerCell: (cell: Cell | null, zoom: number) => void,
+  onCellClick: (cell: Cell) => void,
+  onStationDrag?: (stationId: string, targetCell: Cell | null) => void,
 ): Promise<BoardView> {
   const app = new Application()
   const width = Math.max(1, host.clientWidth)
@@ -62,9 +66,20 @@ export async function createBoard(
   const camera = new BoardCamera(width, height)
   const world = new Container()
   const highlight = new Graphics()
-  world.addChild(drawGrid(), highlight)
+  const prototypeGraphics = new PrototypeGraphics()
+  world.addChild(drawGrid(), highlight, prototypeGraphics.container)
   app.stage.addChild(world)
   let hoveredCell: Cell | null = null
+  let stations: PrototypeGraphicsState['stations'] = []
+  let prototypeState: PrototypeGraphicsState | null = null
+  let activeDrag: { pointerId: number; stationId: string; startX: number; startY: number; dragging: boolean } | null = null
+  let suppressClick = false
+
+  const clientToCell = (clientX: number, clientY: number): Cell | null => {
+    const rect = app.canvas.getBoundingClientRect()
+    if (clientX < rect.left || clientX >= rect.right || clientY < rect.top || clientY >= rect.bottom) return null
+    return camera.screenToCell(pointInCanvas(clientX, clientY, app.canvas))
+  }
 
   const applyCamera = () => {
     const { x, y, scale } = camera.transform
@@ -91,22 +106,84 @@ export async function createBoard(
   }
 
   const onPointerMove = (event: PointerEvent) => {
-    const cell = camera.screenToCell(pointInCanvas(event, app.canvas))
+    const cell = clientToCell(event.clientX, event.clientY)
+    if (activeDrag?.pointerId === event.pointerId) {
+      if (!activeDrag.dragging && Math.hypot(event.clientX - activeDrag.startX, event.clientY - activeDrag.startY) > 5) {
+        activeDrag.dragging = true
+      }
+      if (activeDrag.dragging) {
+        if (cell?.column !== hoveredCell?.column || cell?.row !== hoveredCell?.row) showCell(cell)
+        if (prototypeState) {
+          prototypeGraphics.update({
+            ...prototypeState,
+            selectedStationId: activeDrag.stationId,
+            placementCell: cell,
+            placementValid: !!cell && !stations.some((station) => station.id !== activeDrag?.stationId
+              && station.cell.column === cell.column && station.cell.row === cell.row),
+          })
+        }
+        return
+      }
+    }
     if (cell?.column !== hoveredCell?.column || cell?.row !== hoveredCell?.row) {
       showCell(cell)
     }
   }
-  const onPointerLeave = () => showCell(null)
+  const onPointerLeave = () => {
+    if (!activeDrag?.dragging) showCell(null)
+  }
+  const onPointerDown = (event: PointerEvent) => {
+    if (event.button !== 0 || !onStationDrag) return
+    const cell = clientToCell(event.clientX, event.clientY)
+    const station = cell && stations.find((candidate) => candidate.cell.column === cell.column && candidate.cell.row === cell.row)
+    if (!station) return
+    activeDrag = {
+      pointerId: event.pointerId,
+      stationId: station.id,
+      startX: event.clientX,
+      startY: event.clientY,
+      dragging: false,
+    }
+    app.canvas.setPointerCapture(event.pointerId)
+  }
+  const onPointerUp = (event: PointerEvent) => {
+    if (activeDrag?.pointerId !== event.pointerId) return
+    const drag = activeDrag
+    if (drag.dragging) {
+      const cell = clientToCell(event.clientX, event.clientY)
+      if (cell?.column !== hoveredCell?.column || cell?.row !== hoveredCell?.row) showCell(cell)
+      onStationDrag?.(drag.stationId, cell)
+      suppressClick = true
+      window.setTimeout(() => { suppressClick = false }, 0)
+    }
+    activeDrag = null
+    if (app.canvas.hasPointerCapture(event.pointerId)) app.canvas.releasePointerCapture(event.pointerId)
+  }
+  const onPointerCancel = (event: PointerEvent) => {
+    if (activeDrag?.pointerId === event.pointerId) activeDrag = null
+  }
+  const onClick = (event: MouseEvent) => {
+    if (suppressClick) {
+      suppressClick = false
+      return
+    }
+    const cell = clientToCell(event.clientX, event.clientY)
+    if (cell) onCellClick(cell)
+  }
   const onWheel = (event: WheelEvent) => {
     event.preventDefault()
-    const point = pointInCanvas(event, app.canvas)
+    const point = pointInCanvas(event.clientX, event.clientY, app.canvas)
     camera.zoomAt(point, event.deltaY < 0 ? 1.1 : 1 / 1.1)
     applyCamera()
     showCell(camera.screenToCell(point))
   }
 
+  app.canvas.addEventListener('pointerdown', onPointerDown)
   app.canvas.addEventListener('pointermove', onPointerMove)
+  app.canvas.addEventListener('pointerup', onPointerUp)
+  app.canvas.addEventListener('pointercancel', onPointerCancel)
   app.canvas.addEventListener('pointerleave', onPointerLeave)
+  app.canvas.addEventListener('click', onClick)
   app.canvas.addEventListener('wheel', onWheel, { passive: false })
   const resizeObserver = new ResizeObserver(() => {
     const nextWidth = Math.max(1, host.clientWidth)
@@ -120,10 +197,20 @@ export async function createBoard(
   onPointerCell(null, camera.transform.scale)
 
   return {
+    clientToCell,
+    updatePrototype(state) {
+      stations = state.stations
+      prototypeState = state
+      prototypeGraphics.update(state)
+    },
     destroy() {
       resizeObserver.disconnect()
       app.canvas.removeEventListener('pointermove', onPointerMove)
+      app.canvas.removeEventListener('pointerdown', onPointerDown)
+      app.canvas.removeEventListener('pointerup', onPointerUp)
+      app.canvas.removeEventListener('pointercancel', onPointerCancel)
       app.canvas.removeEventListener('pointerleave', onPointerLeave)
+      app.canvas.removeEventListener('click', onClick)
       app.canvas.removeEventListener('wheel', onWheel)
       app.destroy(true)
     },
