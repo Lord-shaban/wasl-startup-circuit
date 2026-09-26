@@ -1,4 +1,4 @@
-import { GRID_COLUMNS, GRID_ROWS, type Cell } from '../view/camera'
+import { GRID_COLUMNS, GRID_ROWS, type Cell } from './board-types'
 
 export const PRODUCT_STATION_COST = 100
 export const ADJACENCY_BONUS = 5

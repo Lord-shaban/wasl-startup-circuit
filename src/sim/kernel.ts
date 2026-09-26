@@ -9,9 +9,12 @@ export interface ScheduledEvent<Event> {
 }
 
 export interface SimulationSnapshot<State, Event> {
+  readonly version: 1
   readonly tick: number
   readonly state: State
   readonly randomState: number
+  readonly nextSequence: number
+  readonly limits: Required<SimulationLimits>
   readonly pending: readonly ScheduledEvent<Event>[]
 }
 
@@ -41,6 +44,25 @@ export interface StepResult {
 
 const DEFAULT_MAX_PENDING_EVENTS = 4096
 const DEFAULT_MAX_EVENTS_PER_TICK = 256
+const SNAPSHOT_VERSION = 1
+
+function record(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value)
+}
+
+function nonnegativeSafeInteger(value: unknown, name: string): number {
+  if (!Number.isSafeInteger(value) || (value as number) < 0) {
+    throw new RangeError(`${name} must be a nonnegative safe integer`)
+  }
+  return value as number
+}
+
+function uint32(value: unknown, name: string): number {
+  if (!Number.isInteger(value) || (value as number) < 0 || (value as number) > 0xffffffff) {
+    throw new RangeError(`${name} must be an unsigned 32-bit integer`)
+  }
+  return value as number
+}
 
 function positiveInteger(value: number, name: string): number {
   if (!Number.isSafeInteger(value) || value < 1) {
@@ -92,6 +114,59 @@ export class Simulation<State, Event> {
     )
   }
 
+  /** Restore a versioned snapshot with the same reducer used by the original run. */
+  static fromSnapshot<State, Event>(
+    snapshot: unknown,
+    reduceEvent: EventReducer<State, Event>,
+  ): Simulation<State, Event> {
+    if (!record(snapshot) || snapshot.version !== SNAPSHOT_VERSION) {
+      throw new RangeError('unsupported simulation snapshot version')
+    }
+    const tick = nonnegativeSafeInteger(snapshot.tick, 'snapshot tick')
+    const randomState = uint32(snapshot.randomState, 'snapshot randomState')
+    const nextSequence = nonnegativeSafeInteger(snapshot.nextSequence, 'snapshot nextSequence')
+    if (!record(snapshot.limits)) {
+      throw new TypeError('snapshot limits are invalid')
+    }
+    const maxPendingEvents = positiveInteger(snapshot.limits.maxPendingEvents as number, 'maxPendingEvents')
+    const maxEventsPerTick = positiveInteger(snapshot.limits.maxEventsPerTick as number, 'maxEventsPerTick')
+    if (!Object.hasOwn(snapshot, 'state') || !Array.isArray(snapshot.pending)) {
+      throw new TypeError('snapshot state or pending events are invalid')
+    }
+    if (snapshot.pending.length > maxPendingEvents) {
+      throw new RangeError('snapshot event queue exceeds its limit')
+    }
+
+    let previousDueTick = -1
+    let previousSequence = -1
+    const seenSequences = new Set<number>()
+    for (const item of snapshot.pending) {
+      if (!record(item) || !Object.hasOwn(item, 'event')) {
+        throw new TypeError('snapshot pending event is invalid')
+      }
+      const dueTick = nonnegativeSafeInteger(item.dueTick, 'snapshot event dueTick')
+      const sequence = nonnegativeSafeInteger(item.sequence, 'snapshot event sequence')
+      if (sequence >= nextSequence || seenSequences.has(sequence)) {
+        throw new RangeError('snapshot event sequence is invalid')
+      }
+      if (dueTick < previousDueTick || (dueTick === previousDueTick && sequence <= previousSequence)) {
+        throw new RangeError('snapshot pending events are out of order')
+      }
+      seenSequences.add(sequence)
+      previousDueTick = dueTick
+      previousSequence = sequence
+    }
+
+    // Cloning here also rejects values that the regular snapshot API cannot preserve.
+    const saved = structuredClone(snapshot) as unknown as SimulationSnapshot<State, Event>
+    const simulation = new Simulation(saved.state, 0, reduceEvent, { maxPendingEvents, maxEventsPerTick })
+    simulation.tick = tick
+    simulation.randomState = randomState
+    simulation.nextSequence = nextSequence
+    simulation.pending.push(...saved.pending)
+    return simulation
+  }
+
   /** Delay 0 also permits a causal chain within the currently processing tick. */
   schedule(event: Event, delayTicks = 0): void {
     if (!Number.isSafeInteger(delayTicks) || delayTicks < 0) {
@@ -103,6 +178,9 @@ export class Simulation<State, Event> {
     const dueTick = this.tick + delayTicks
     if (!Number.isSafeInteger(dueTick)) {
       throw new RangeError('scheduled tick exceeds the safe integer range')
+    }
+    if (this.nextSequence >= Number.MAX_SAFE_INTEGER) {
+      throw new RangeError('event sequence exceeds the safe integer range')
     }
     const item: ScheduledEvent<Event> = {
       dueTick,
@@ -156,9 +234,15 @@ export class Simulation<State, Event> {
 
   snapshot(): SimulationSnapshot<State, Event> {
     return structuredClone({
+      version: SNAPSHOT_VERSION,
       tick: this.tick,
       state: this.state,
       randomState: this.randomState,
+      nextSequence: this.nextSequence,
+      limits: {
+        maxPendingEvents: this.maxPendingEvents,
+        maxEventsPerTick: this.maxEventsPerTick,
+      },
       pending: this.pending,
     })
   }

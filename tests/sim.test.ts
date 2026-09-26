@@ -67,6 +67,80 @@ describe('deterministic simulation', () => {
     copy.state.items.push('changed')
     expect(sim.snapshot().state.items).toEqual(['original'])
   })
+
+  it('continues identically after a JSON snapshot round trip', () => {
+    const reduce = (state: { log: string[]; rolls: number[] }, event: TestEvent, context: {
+      tick: number
+      random(): number
+      schedule(event: TestEvent, delayTicks?: number): void
+    }) => {
+      if (event.label === 'first') context.schedule({ kind: 'chain', label: 'follow-up' })
+      return {
+        log: [...state.log, `${context.tick}:${event.label}`],
+        rolls: [...state.rolls, context.random()],
+      }
+    }
+    const original = new Simulation({ log: [] as string[], rolls: [] as number[] }, 42, reduce, {
+      maxPendingEvents: 5,
+      maxEventsPerTick: 1,
+    })
+    original.schedule({ kind: 'sample', label: 'first' }, 1)
+    original.schedule({ kind: 'sample', label: 'second' }, 1)
+    original.schedule({ kind: 'sample', label: 'later' }, 3)
+    original.step()
+
+    const stored = JSON.parse(JSON.stringify(original.snapshot()))
+    const resumed = Simulation.fromSnapshot<{
+      log: string[]
+      rolls: number[]
+    }, TestEvent>(stored, reduce)
+    expect(resumed.snapshot()).toEqual(original.snapshot())
+    stored.state.log.push('external mutation')
+    stored.pending[0].event.label = 'external mutation'
+    expect(resumed.snapshot()).toEqual(original.snapshot())
+
+    // Both runs process deferred work, a same-tick chain, and future work.
+    for (let i = 0; i < 4; i++) {
+      expect(resumed.step()).toEqual(original.step())
+      expect(resumed.snapshot()).toEqual(original.snapshot())
+    }
+    resumed.schedule({ kind: 'sample', label: 'next' })
+    original.schedule({ kind: 'sample', label: 'next' })
+    expect(resumed.snapshot()).toEqual(original.snapshot())
+    expect(resumed.step()).toEqual(original.step())
+    expect(resumed.snapshot()).toEqual(original.snapshot())
+  })
+
+  it('rejects invalid or incompatible snapshots', () => {
+    const reduce = (state: number) => state
+    const sim = new Simulation(0, 1, reduce, { maxPendingEvents: 2 })
+    sim.schedule({ kind: 'sample', label: 'one' }, 2)
+    const valid = sim.snapshot()
+    const changed = (change: (snapshot: Record<string, any>) => void) => {
+      const snapshot = structuredClone(valid) as unknown as Record<string, any>
+      change(snapshot)
+      return snapshot
+    }
+
+    expect(() => Simulation.fromSnapshot(changed((s) => { s.version = 2 }), reduce)).toThrow(
+      'unsupported simulation snapshot version',
+    )
+    expect(() => Simulation.fromSnapshot(changed((s) => { s.randomState = -1 }), reduce)).toThrow(
+      'randomState',
+    )
+    expect(() => Simulation.fromSnapshot(changed((s) => { s.nextSequence = 0 }), reduce)).toThrow(
+      'sequence',
+    )
+    expect(() => Simulation.fromSnapshot(changed((s) => { s.pending[0].dueTick = -1 }), reduce)).toThrow(
+      'dueTick',
+    )
+    expect(() => Simulation.fromSnapshot(changed((s) => { s.limits.maxPendingEvents = 0 }), reduce)).toThrow(
+      'maxPendingEvents',
+    )
+    expect(() => Simulation.fromSnapshot(changed((s) => { s.pending.push(s.pending[0]) }), reduce)).toThrow(
+      'sequence',
+    )
+  })
 })
 
 describe('fixed step clock', () => {

@@ -1,16 +1,13 @@
+import { CELL_SIZE, GRID_COLUMNS, GRID_ROWS, type Cell } from '../sim/board-types'
+
+export { CELL_SIZE, GRID_COLUMNS, GRID_ROWS }
+export type { Cell }
+
 export interface Point {
   readonly x: number
   readonly y: number
 }
 
-export interface Cell {
-  readonly column: number
-  readonly row: number
-}
-
-export const CELL_SIZE = 72
-export const GRID_COLUMNS = 12
-export const GRID_ROWS = 8
 export const MIN_ZOOM = 0.5
 export const MAX_ZOOM = 2.2
 const BOARD_PADDING = 24
