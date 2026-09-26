@@ -13,23 +13,43 @@ body { min-width: 320px; min-height: 100vh; margin: 0; }
 
 .shell {
   display: grid;
+  width: min(100%, 80rem);
   min-height: 100vh;
-  place-items: center;
-  padding: 2rem;
-  background: radial-gradient(circle at 70% 30%, #25384a 0, #101c2b 60%);
+  align-content: center;
+  gap: 1.25rem;
+  margin-inline: auto;
+  padding: 1.25rem;
 }
 
-.intro {
-  width: min(100%, 44rem);
-  padding: clamp(2rem, 5vw, 4rem);
+.intro { padding: .6rem .25rem; }
+.eyebrow { margin: 0 0 .65rem; color: #32c7ba; font-size: .75rem; font-weight: 700; letter-spacing: .18em; }
+h1 { margin: 0; font-size: clamp(2rem, 4vw, 3.2rem); line-height: 1.1; }
+.description { margin: .8rem 0 1rem; color: #c7d4d5; line-height: 1.5; }
+.status { display: flex; align-items: center; gap: .6rem; margin: 0; color: #b7c9ca; font-size: .85rem; }
+.status-dot { width: .6rem; height: .6rem; flex: none; border-radius: 50%; background: #32c7ba; box-shadow: 0 0 1rem #32c7ba88; }
+
+.board-panel {
+  position: relative;
+  height: clamp(350px, 58vh, 620px);
+  overflow: hidden;
   border: 1px solid #41616a;
-  border-radius: 1.5rem;
-  background: #142536d9;
+  border-radius: 1.3rem;
+  background: #101c2b;
   box-shadow: 0 2rem 5rem #07111d88;
 }
 
-.eyebrow { margin: 0 0 1.5rem; color: #32c7ba; font-size: .8rem; font-weight: 700; letter-spacing: .18em; }
-h1 { margin: 0; font-size: clamp(2.3rem, 6vw, 4.5rem); line-height: 1.08; }
-.description { max-width: 33rem; margin: 1.5rem 0 2.5rem; color: #c7d4d5; font-size: 1.1rem; line-height: 1.6; }
-.status { display: flex; align-items: center; gap: .6rem; margin: 0; color: #b7c9ca; font-size: .9rem; }
-.status-dot { width: .65rem; height: .65rem; flex: none; border-radius: 50%; background: #32c7ba; box-shadow: 0 0 1rem #32c7ba88; }
+.board-host { width: 100%; height: 100%; }
+.board-host canvas { display: block; width: 100%; height: 100%; }
+.board-readout {
+  position: absolute;
+  inset-inline-start: 1rem;
+  bottom: 1rem;
+  margin: 0;
+  padding: .6rem .85rem;
+  border: 1px solid #42616b;
+  border-radius: .6rem;
+  background: #101c2be8;
+  color: #d4e2e2;
+  font-size: .82rem;
+  pointer-events: none;
+}
