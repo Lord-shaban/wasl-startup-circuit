@@ -57,7 +57,7 @@ test('buys a Product station and places it on an open board cell', async ({ page
   await expect(page.locator('#delivery-preview')).toBeEmpty()
 })
 
-test('delivers the opportunity once with the adjacent station bonus', async ({ page }) => {
+test('first delivery pays with the adjacent station bonus and produces a referral', async ({ page }) => {
   await openPrototype(page)
 
   await page.locator('#buy-product').click()
@@ -68,8 +68,44 @@ test('delivers the opportunity once with the adjacent station bonus', async ({ p
   await dragPointer(page, page.locator('#opportunity-card'), adjacentCell)
   await expect(page.locator('#cash-value')).toHaveAttribute('data-value', '155')
   await expect(page.locator('#trust-value')).toHaveAttribute('data-value', '1')
+  await expect(page.locator('#opportunity-card')).toBeVisible()
+  await expect(page.locator('#opportunity-card .card-kicker')).toHaveText('Customer referral')
+  await expect(page.locator('#opportunity-value')).toHaveText('40')
+})
+
+test('bounds referrals to one: deliver, receive referral, deliver it, then retry', async ({ page }) => {
+  await openPrototype(page)
+
+  await page.locator('#buy-product').click()
+  const stationCell = await cellCenter(page, 7, 4)
+  await page.mouse.click(stationCell.x, stationCell.y)
+  await expect(page.locator('#cash-value')).toHaveAttribute('data-value', '100')
+
+  await dragPointer(page, page.locator('#opportunity-card'), stationCell)
+  await expect(page.locator('#cash-value')).toHaveAttribute('data-value', '155')
+  await expect(page.locator('#trust-value')).toHaveAttribute('data-value', '1')
+  // The card remains unavailable during delivery and the Pixi trail; its DOM
+  // state marks arrival once the bounded effect finishes.
+  await expect(page.locator('#opportunity-card')).toBeVisible()
+  await expect(page.locator('#opportunity-card .card-kicker')).toHaveText('Customer referral')
+  await expect(page.locator('#opportunity-value')).toHaveText('40')
+  await expect(page.locator('#prototype-feedback')).toContainText(/referral arrived/i)
+
+  await dragPointer(page, page.locator('#opportunity-card'), stationCell)
+  await expect(page.locator('#cash-value')).toHaveAttribute('data-value', '200')
+  await expect(page.locator('#trust-value')).toHaveAttribute('data-value', '2')
   await expect(page.locator('#prototype-feedback')).toContainText(/delivered/i)
   await expect(page.locator('#opportunity-card')).toBeHidden()
+  await expect(page.locator('#retry-prototype')).toBeVisible()
+
+  // Retry is available only after the referral has been consumed and no next
+  // referral is pending, so no timed observation is needed here.
+  await page.locator('#retry-prototype').click()
+  await expect(page.locator('#cash-value')).toHaveAttribute('data-value', '200')
+  await expect(page.locator('#trust-value')).toHaveAttribute('data-value', '0')
+  await expect(page.locator('#opportunity-card')).toBeVisible()
+  await expect(page.locator('#opportunity-value')).toHaveText('50')
+  await expect(page.locator('#retry-prototype')).toBeHidden()
 })
 
 test('invalid opportunity drops snap back without a reward', async ({ page }) => {
@@ -156,12 +192,14 @@ test('switches language without losing prototype state', async ({ page }) => {
   await dragPointer(page, page.locator('#opportunity-card'), adjacentCell)
   await expect(page.locator('#cash-value')).toHaveAttribute('data-value', '155')
   await expect(page.locator('#trust-value')).toHaveAttribute('data-value', '1')
+  await expect(page.locator('#opportunity-card .card-kicker')).toHaveText('Customer referral')
+  await expect(page.locator('#opportunity-value')).toHaveText('40')
 
   await page.getByRole('button', { name: 'Switch to Arabic' }).click()
   await expect(page.locator('html')).toHaveAttribute('lang', 'ar')
   await expect(page.locator('#cash-value')).toHaveAttribute('data-value', '155')
   await expect(page.locator('#trust-value')).toHaveAttribute('data-value', '1')
-  await expect(page.locator('#prototype-feedback')).toContainText('تم تسليم')
+  await expect(page.locator('#opportunity-card .card-kicker')).toHaveText('إحالة عميل')
 
   await page.getByRole('button', { name: 'التبديل إلى الإنجليزية' }).click()
   await expect(page.locator('html')).toHaveAttribute('lang', 'en')

@@ -10,6 +10,7 @@ import {
   moveStation,
   placeProductStation,
   PRODUCT_STATION_COST,
+  spawnPendingReferral,
 } from './sim/prototype'
 import { formatBoardReadout, readLocale, saveLocale, translate, type Locale } from './ui/localization'
 import { prototypeText, type PrototypeTextKey } from './ui/prototype-copy'
@@ -60,6 +61,7 @@ appRoot.innerHTML = `
         <button id="cancel-action" class="secondary-action" type="button" hidden></button>
         <p id="delivery-preview" class="delivery-preview" aria-live="polite"></p>
         <p id="prototype-feedback" class="prototype-feedback" aria-live="polite"></p>
+        <button id="retry-prototype" class="secondary-action" type="button" hidden></button>
         <h2 data-i18n="upgrades"></h2>
         <p class="preview-note" data-i18n="previewOnly"></p>
       </aside>
@@ -78,6 +80,7 @@ const boardPanel = required<HTMLElement>('.board-panel')
 const boardReadout = required<HTMLParagraphElement>('#board-readout')
 const languageSwitch = required<HTMLButtonElement>('#language-switch')
 const opportunityCard = required<HTMLDivElement>('#opportunity-card')
+const opportunityLabel = required<HTMLElement>('.card-kicker')
 const opportunityValue = required<HTMLSpanElement>('#opportunity-value')
 const cashValue = required<HTMLElement>('#cash-value')
 const trustValue = required<HTMLElement>('#trust-value')
@@ -86,6 +89,7 @@ const cancelAction = required<HTMLButtonElement>('#cancel-action')
 const modeHint = required<HTMLParagraphElement>('#mode-hint')
 const deliveryPreviewElement = required<HTMLParagraphElement>('#delivery-preview')
 const feedbackElement = required<HTMLParagraphElement>('#prototype-feedback')
+const retryPrototype = required<HTMLButtonElement>('#retry-prototype')
 
 let locale: Locale = readLocale()
 let currentCell: Cell | null = null
@@ -133,12 +137,17 @@ function renderPrototype(): void {
   trustValue.textContent = number(prototype.trust)
   trustValue.dataset.value = String(prototype.trust)
   opportunityValue.textContent = number(prototype.opportunity.value)
+  opportunityLabel.textContent = prototypeText(locale, prototype.opportunity.id.startsWith('referral-') ? 'referralOpportunity' : 'opportunity')
   opportunityCard.hidden = prototype.opportunity.status !== 'available'
   buyProduct.disabled = processing
   buyProduct.textContent = `${prototypeText(locale, 'buyProduct')} · ${number(PRODUCT_STATION_COST)}`
   cancelAction.textContent = prototypeText(locale, 'cancel')
   cancelAction.hidden = mode === 'idle'
-  modeHint.textContent = prototypeText(locale, mode === 'placing' ? 'placeStation' : mode === 'moving' ? 'moveStation' : 'dragHint')
+  retryPrototype.textContent = prototypeText(locale, 'retry')
+  retryPrototype.hidden = processing || prototype.opportunity.status !== 'delivered' || !!prototype.referralPending
+  modeHint.textContent = prototypeText(locale, processing
+    ? prototype.referralPending ? 'referralInMotion' : 'processing'
+    : retryPrototype.hidden ? mode === 'placing' ? 'placeStation' : mode === 'moving' ? 'moveStation' : 'dragHint' : 'prototypeComplete')
   feedbackElement.textContent = feedbackKey
     ? `${prototypeText(locale, feedbackKey)}${feedbackKey === 'delivered' ? ` +${number(lastPayout)}${lastBonus ? ` · ${prototypeText(locale, 'adjacencyBonus')} +${number(lastBonus)}` : ''}` : ''}`
     : ''
@@ -211,6 +220,17 @@ cancelAction.addEventListener('click', () => {
   renderPrototype()
 })
 
+retryPrototype.addEventListener('click', () => {
+  prototype = createPrototypeState()
+  mode = 'idle'
+  movingStationId = null
+  dropTargetStationId = null
+  feedbackKey = null
+  lastPayout = 0
+  lastBonus = 0
+  renderPrototype()
+})
+
 opportunityCard.addEventListener('pointerdown', (event) => {
   if (event.button !== 0 || processing || prototype.opportunity.status !== 'available') return
   if (mode !== 'idle') {
@@ -263,6 +283,26 @@ opportunityCard.addEventListener('pointerup', (event) => {
         feedbackKey = 'invalidOpportunityDrop'
       }
       resetDrag()
+      const pending = prototype.referralPending
+      if (pending) {
+        const source = prototype.stations.find((station) => station.id === pending.sourceStationId)?.cell
+        if (source) board?.startReferral(source, { column: locale === 'ar' ? 0 : 11, row: 0 })
+        processing = true
+        renderPrototype()
+        window.setTimeout(() => {
+          const spawned = spawnPendingReferral(prototype)
+          processing = false
+          if (spawned.ok) {
+            prototype = spawned.value
+            feedbackKey = 'referralCreated'
+          }
+          renderPrototype()
+          if (spawned.ok) {
+            opportunityCard.classList.add('arriving')
+            window.setTimeout(() => opportunityCard.classList.remove('arriving'), 260)
+          }
+        }, 840)
+      }
     }, 420)
   } else {
     feedbackKey = 'invalidOpportunityDrop'

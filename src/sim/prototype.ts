@@ -20,6 +20,8 @@ export interface PrototypeState {
   readonly opportunity: PrototypeOpportunity
   readonly stations: readonly ProductStation[]
   readonly nextStationId: number
+  readonly referralBudget: number
+  readonly referralPending: { readonly sourceStationId: string; readonly fromOpportunityId: string } | null
 }
 
 export type RuleResult<T> =
@@ -41,6 +43,8 @@ export function createPrototypeState(): PrototypeState {
     opportunity: { id: 'opportunity-1', value: 50, status: 'available' },
     stations: [{ id: 'product-1', cell: CENTER_CELL }],
     nextStationId: 2,
+    referralBudget: 1,
+    referralPending: null,
   }
 }
 
@@ -144,6 +148,23 @@ export function deliverOpportunity(
       cash: state.cash + preview.value.payout,
       trust: state.trust + 1,
       opportunity: { ...state.opportunity, status: 'delivered' },
+      referralBudget: state.referralBudget > 0 ? state.referralBudget - 1 : state.referralBudget,
+      referralPending: state.referralBudget > 0
+        ? { sourceStationId: stationId, fromOpportunityId: opportunityId }
+        : state.referralPending,
+    },
+  }
+}
+
+export function spawnPendingReferral(state: PrototypeState): RuleResult<PrototypeState> {
+  if (!state.referralPending) return reject('No pending referral')
+  if (state.opportunity.status !== 'delivered') return reject('Current opportunity is not delivered')
+  return {
+    ok: true,
+    value: {
+      ...state,
+      opportunity: { id: 'referral-1', value: 40, status: 'available' },
+      referralPending: null,
     },
   }
 }

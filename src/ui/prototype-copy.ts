@@ -1,5 +1,6 @@
 export const prototypeCopyKeys = [
   'opportunity',
+  'referralOpportunity',
   'dragHint',
   'buyProduct',
   'placeStation',
@@ -12,6 +13,9 @@ export const prototypeCopyKeys = [
   'stationMoved',
   'delivered',
   'processing',
+  'referralInMotion',
+  'referralCreated',
+  'prototypeComplete',
   'adjacencyBonus',
   'cash',
   'trust',
@@ -25,6 +29,7 @@ export type PrototypeLocale = 'en' | 'ar'
 const copy: Record<PrototypeLocale, Record<PrototypeTextKey, string>> = {
   en: {
     opportunity: 'Customer opportunity',
+    referralOpportunity: 'Customer referral',
     dragHint: 'Drag onto a Product station',
     buyProduct: 'Buy Product',
     placeStation: 'Place station',
@@ -37,6 +42,9 @@ const copy: Record<PrototypeLocale, Record<PrototypeTextKey, string>> = {
     stationMoved: 'Station moved',
     delivered: 'Opportunity delivered!',
     processing: 'Processing opportunity…',
+    referralInMotion: 'Referral traveling from this station…',
+    referralCreated: 'Referral arrived! Drag it to a Product station.',
+    prototypeComplete: 'First chain complete. Try a different layout.',
     adjacencyBonus: 'Adjacent station bonus',
     cash: 'Cash',
     trust: 'Trust',
@@ -45,6 +53,7 @@ const copy: Record<PrototypeLocale, Record<PrototypeTextKey, string>> = {
   },
   ar: {
     opportunity: 'فرصة عميل',
+    referralOpportunity: 'إحالة عميل',
     dragHint: 'اسحب إلى محطة منتج',
     buyProduct: 'اشترِ محطة منتج',
     placeStation: 'ضع المحطة',
@@ -57,6 +66,9 @@ const copy: Record<PrototypeLocale, Record<PrototypeTextKey, string>> = {
     stationMoved: 'نُقلت المحطة',
     delivered: 'تم تسليم الفرصة!',
     processing: 'جاري تنفيذ الفرصة…',
+    referralInMotion: 'إحالة تنطلق من هذه المحطة…',
+    referralCreated: 'وصلت الإحالة! اسحبها إلى محطة منتج.',
+    prototypeComplete: 'اكتملت السلسلة الأولى. جرّب ترتيبًا مختلفًا.',
     adjacencyBonus: 'مكافأة المحطات المتجاورة',
     cash: 'النقد',
     trust: 'الثقة',

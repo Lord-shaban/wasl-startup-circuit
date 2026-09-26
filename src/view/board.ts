@@ -8,10 +8,12 @@ import {
   type Point,
 } from './camera'
 import { PrototypeGraphics, type PrototypeGraphicsState } from './prototype-graphics'
+import { ReferralEffect } from './referral-effect'
 
 export interface BoardView {
   clientToCell(clientX: number, clientY: number): Cell | null
   updatePrototype(state: PrototypeGraphicsState): void
+  startReferral(source: Cell, destination: Cell): void
   destroy(): void
 }
 
@@ -67,8 +69,11 @@ export async function createBoard(
   const world = new Container()
   const highlight = new Graphics()
   const prototypeGraphics = new PrototypeGraphics()
-  world.addChild(drawGrid(), highlight, prototypeGraphics.container)
+  const referralEffect = new ReferralEffect()
+  world.addChild(drawGrid(), highlight, prototypeGraphics.container, referralEffect.container)
   app.stage.addChild(world)
+  const tickEffect = (ticker: { deltaMS: number }) => referralEffect.update(ticker.deltaMS)
+  app.ticker.add(tickEffect)
   let hoveredCell: Cell | null = null
   let stations: PrototypeGraphicsState['stations'] = []
   let prototypeState: PrototypeGraphicsState | null = null
@@ -203,7 +208,11 @@ export async function createBoard(
       prototypeState = state
       prototypeGraphics.update(state)
     },
+    startReferral(source, destination) {
+      referralEffect.start(source, destination)
+    },
     destroy() {
+      app.ticker.remove(tickEffect)
       resizeObserver.disconnect()
       app.canvas.removeEventListener('pointermove', onPointerMove)
       app.canvas.removeEventListener('pointerdown', onPointerDown)

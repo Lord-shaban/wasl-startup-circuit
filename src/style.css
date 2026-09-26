@@ -89,6 +89,8 @@ h1 { margin: 0; font-size: clamp(2rem, 4vw, 3.2rem); line-height: 1.1; }
 .opportunity-card[hidden] { display: none; }
 .opportunity-card.dragging { cursor: grabbing; box-shadow: 0 1.4rem 2rem #07111dcc; }
 .opportunity-card.processing { transform: scale(.3); opacity: 0; pointer-events: none; transition: left .42s ease-in, top .42s ease-in, transform .42s ease-in, opacity .42s ease-in; }
+.opportunity-card.arriving { animation: referral-arrival .26s ease-out; }
+@keyframes referral-arrival { from { transform: scale(.65); opacity: .25; } to { transform: scale(1); opacity: 1; } }
 .card-kicker { color: #ffd2ae; font-size: .75rem; font-weight: 700; letter-spacing: .04em; }
 .opportunity-value { color: #fff3da; font-size: 1.7rem; line-height: 1; }
 .card-hint { max-width: 11rem; color: #f5c8aa; font-size: .72rem; line-height: 1.35; }
@@ -126,6 +128,7 @@ h1 { margin: 0; font-size: clamp(2rem, 4vw, 3.2rem); line-height: 1.1; }
 .preview-note { color: #a9babe; font-size: .85rem; line-height: 1.55; }
 .primary-action, .secondary-action { width: 100%; padding: .75rem .9rem; border-radius: .7rem; font: inherit; font-weight: 700; cursor: pointer; }
 .primary-action { border: 1px solid #32c7ba; background: #1b6868; color: #f4f0df; }
+.primary-action:disabled { cursor: wait; opacity: .62; }
 .primary-action:hover, .primary-action:focus-visible { background: #227b78; outline-color: #f4f0df; }
 .secondary-action { border: 1px solid #6a8590; background: #243849; color: #f4f0df; }
 .secondary-action[hidden] { display: none; }

@@ -8,6 +8,7 @@ import {
   deliveryPreview,
   moveStation,
   placeProductStation,
+  spawnPendingReferral,
 } from '../src/sim/prototype'
 
 describe('prototype rules', () => {
@@ -66,5 +67,33 @@ describe('prototype rules', () => {
     expect(duplicate.ok).toBe(false)
     if (!duplicate.ok) expect(duplicate.reason).toMatch(/already delivered/i)
     expect(result.value.cash).toBe(neighbor.value.cash + preview.value.payout)
+  })
+
+  it('spawns exactly one referral and stops the chain after its delivery', () => {
+    const initial = createPrototypeState()
+    const firstDelivery = deliverOpportunity(initial, 'opportunity-1', 'product-1')
+    expect(firstDelivery.ok).toBe(true)
+    if (!firstDelivery.ok) return
+    expect(firstDelivery.value.referralBudget).toBe(0)
+    expect(firstDelivery.value.referralPending).toEqual({
+      sourceStationId: 'product-1',
+      fromOpportunityId: 'opportunity-1',
+    })
+
+    const spawned = spawnPendingReferral(firstDelivery.value)
+    expect(spawned.ok).toBe(true)
+    if (!spawned.ok) return
+    expect(spawned.value.opportunity).toEqual({ id: 'referral-1', value: 40, status: 'available' })
+    expect(spawned.value.referralPending).toBeNull()
+    expect(spawnPendingReferral(spawned.value).ok).toBe(false)
+    expect(deliverOpportunity(spawned.value, 'opportunity-1', 'product-1').ok).toBe(false)
+
+    const referralDelivery = deliverOpportunity(spawned.value, 'referral-1', 'product-1')
+    expect(referralDelivery.ok).toBe(true)
+    if (!referralDelivery.ok) return
+    expect(referralDelivery.value.referralPending).toBeNull()
+    expect(referralDelivery.value.referralBudget).toBe(0)
+    expect(spawnPendingReferral(referralDelivery.value).ok).toBe(false)
+    expect(deliverOpportunity(referralDelivery.value, 'referral-1', 'product-1').ok).toBe(false)
   })
 })
