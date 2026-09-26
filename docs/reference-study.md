@@ -4,7 +4,7 @@ Research date: 26 September 2026. This study extracts design principles and game
 
 ## Sources and limits
 
-I inspected the [official Steam page](https://store.steampowered.com/app/4428630/My_Fire_Is_Bigger_Than_Yours/), its screenshots and animated trailer frames; the [browser demo on itch.io](https://amarravi.itch.io/my-fire-is-bigger) and its main menu; and the developer's [March strategic update](https://amarravi.itch.io/my-fire-is-bigger/devlog/1466736/demo-20-is-live-strategic-gameplay-update) and [June layout and visual update](https://amarravi.itch.io/my-fire-is-bigger/devlog/1545349/flip-spawners-new-upgrade-tree-updated-visuals). The HTML5 demo loaded, but canvas interaction did not respond in this inspection session. I therefore distinguish direct visual observations from descriptions and do not claim a complete hands-on playthrough. Later-stage details come from official material.
+I inspected the [official Steam page](https://store.steampowered.com/app/4428630/My_Fire_Is_Bigger_Than_Yours/), its screenshots and animated trailer frames; the developer's [March demo trailer](https://www.youtube.com/watch?v=TCOdoc3L0Xc) and [June trailer](https://www.youtube.com/watch?v=H3jwGpkktKs); the [browser demo on itch.io](https://amarravi.itch.io/my-fire-is-bigger) and its main menu; and the developer's [March strategic update](https://amarravi.itch.io/my-fire-is-bigger/devlog/1466736/demo-20-is-live-strategic-gameplay-update) and [June layout and visual update](https://amarravi.itch.io/my-fire-is-bigger/devlog/1545349/flip-spawners-new-upgrade-tree-updated-visuals). The HTML5 demo loaded, but canvas interaction did not respond in this inspection session. I therefore distinguish direct visual observations from descriptions and do not claim a complete hands-on playthrough. Later-stage details come from official material.
 
 ## Design DNA
 
@@ -20,6 +20,7 @@ I inspected the [official Steam page](https://store.steampowered.com/app/4428630
 - Screenshots place a high-contrast, bright, changing centerpiece against a restrained dark violet environment. This keeps the action readable as density grows.
 - The fire uses bold color blocks, strong silhouettes, and persistent movement. Growth is embodied in the scene rather than expressed only by a counter.
 - Branching effects and colored reward numbers make chain reactions and payoff visible at their source.
+- The March demo trailer shows escalating scene density, branching connections, lightning, reward pop-ups, and a visible rain countdown while the fire remains the focal point.
 - The demo menu uses large color-coded buttons. Later Steam imagery becomes much busier, which makes readability at peak density a design problem.
 - In the June devlog, the developer says spawners respond to fire light and that bonus pop-ups and lightning-chain sound received distinct feedback. The game connects systems through synchronized visual and audio cues.
 
