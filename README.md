@@ -2,7 +2,7 @@
 
 A short browser strategy game about turning one customer opportunity into a company-wide network of products, referrals, and automation. Play with a mouse in English or Arabic.
 
-> **Current status:** Phase 0 and the M1.1 application foundation are complete. The browser shell runs locally; gameplay is not implemented yet. M1.2–M1.5 remain in the web foundation milestone.
+> **Current status:** Phase 0 and the first two M1 foundation issues are complete. The browser shell runs locally and the deterministic simulation kernel is tested; gameplay is not implemented yet. M1.3–M1.5 remain in the web foundation milestone.
 
 ## Game at a glance
 
@@ -27,7 +27,7 @@ pnpm install
 pnpm dev
 ```
 
-Open the local URL printed by Vite. Use `pnpm typecheck` for TypeScript checks and `pnpm build` for the production bundle. Tests will be added with gameplay systems in later M1 issues.
+Open the local URL printed by Vite. Use `pnpm typecheck` for TypeScript checks, `pnpm test` for simulation tests, and `pnpm build` for the production bundle.
 
 ## Project structure
 
@@ -42,11 +42,13 @@ planning/
   issues.tsv           Reviewable issue specifications
   publish.ps1          Idempotent GitHub planning publisher
 src/
-  sim/                Deterministic game rules (planned)
+  sim/                Deterministic kernel and fixed-step clock
   view/               Pixi board renderer (planned)
   ui/                 Bilingual DOM interface (planned)
   content/            Data-defined stations and upgrades (planned)
   platform/           Persistence and audio (planned)
+tests/
+  sim.test.ts          Determinism, event bounds, and fixed-step timing
 ```
 
 ## Development workflow
