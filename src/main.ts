@@ -31,13 +31,14 @@ appRoot.innerHTML = `
       <button id="language-switch" class="language-switch" type="button"></button>
     </header>
     <section class="hud" data-i18n-aria="hud">
-      <div class="stat"><span data-i18n="runway"></span><strong>—</strong></div>
-      <div class="stat"><span data-i18n="market"></span><strong>—</strong></div>
-      <div class="stat"><span data-i18n="impact"></span><strong>—</strong></div>
+      <div class="stat"><span data-i18n="runway"></span><strong data-prototype="future"></strong></div>
+      <div class="stat"><span data-i18n="market"></span><strong data-prototype="future"></strong></div>
+      <div class="stat"><span data-i18n="impact"></span><strong data-prototype="future"></strong></div>
     </section>
     <div class="workspace">
       <section class="board-panel" data-i18n-aria="board">
         <div id="board-host" class="board-host"></div>
+        <p id="starter-station-label" class="starter-station-label" data-prototype="starterStation" hidden></p>
         <div id="opportunity-card" class="opportunity-card">
           <span class="card-kicker" data-prototype="opportunity"></span>
           <strong class="opportunity-value">+<span id="opportunity-value"></span></strong>
@@ -53,8 +54,8 @@ appRoot.innerHTML = `
         <h2 data-i18n="teams"></h2>
         <ul class="team-list">
           <li><span class="team-icon product" aria-hidden="true">□</span><span data-i18n="product"></span></li>
-          <li><span class="team-icon growth" aria-hidden="true">◇</span><span data-i18n="growth"></span></li>
-          <li><span class="team-icon operations" aria-hidden="true">○</span><span data-i18n="operations"></span></li>
+          <li class="future-team"><span class="team-icon growth" aria-hidden="true">◇</span><span data-i18n="growth"></span><small class="future-badge" data-prototype="future"></small></li>
+          <li class="future-team"><span class="team-icon operations" aria-hidden="true">○</span><span data-i18n="operations"></span><small class="future-badge" data-prototype="future"></small></li>
         </ul>
         <button id="buy-product" class="primary-action" type="button"></button>
         <p id="mode-hint" class="mode-hint"></p>
@@ -81,6 +82,7 @@ const boardReadout = required<HTMLParagraphElement>('#board-readout')
 const languageSwitch = required<HTMLButtonElement>('#language-switch')
 const opportunityCard = required<HTMLDivElement>('#opportunity-card')
 const opportunityLabel = required<HTMLElement>('.card-kicker')
+const starterStationLabel = required<HTMLElement>('#starter-station-label')
 const opportunityValue = required<HTMLSpanElement>('#opportunity-value')
 const cashValue = required<HTMLElement>('#cash-value')
 const trustValue = required<HTMLElement>('#trust-value')
@@ -127,11 +129,22 @@ function updateGraphics(): void {
     dropTargetStationId,
     placementCell,
     placementValid,
-    selectedStationId: movingStationId,
+    selectedStationId: movingStationId ?? (prototype.opportunity.id === 'opportunity-1'
+      && prototype.opportunity.status === 'available' && mode === 'idle' && !processing
+      ? prototype.stations[0]?.id ?? null : null),
   })
 }
 
 function renderPrototype(): void {
+  const showStarter = prototype.opportunity.id === 'opportunity-1'
+    && prototype.opportunity.status === 'available' && mode === 'idle' && !processing
+  starterStationLabel.hidden = !showStarter || !board
+  if (showStarter && board) {
+    const point = board.cellToClientPoint(prototype.stations[0].cell)
+    const panel = boardPanel.getBoundingClientRect()
+    starterStationLabel.style.left = `${point.x - panel.left}px`
+    starterStationLabel.style.top = `${point.y - panel.top - 35}px`
+  }
   cashValue.textContent = number(prototype.cash)
   cashValue.dataset.value = String(prototype.cash)
   trustValue.textContent = number(prototype.trust)
@@ -147,7 +160,7 @@ function renderPrototype(): void {
   retryPrototype.hidden = processing || prototype.opportunity.status !== 'delivered' || !!prototype.referralPending
   modeHint.textContent = prototypeText(locale, processing
     ? prototype.referralPending ? 'referralInMotion' : 'processing'
-    : retryPrototype.hidden ? mode === 'placing' ? 'placeStation' : mode === 'moving' ? 'moveStation' : 'dragHint' : 'prototypeComplete')
+    : retryPrototype.hidden ? mode === 'placing' ? 'placeStation' : mode === 'moving' ? 'moveStation' : showStarter ? 'firstAction' : 'dragHint' : 'prototypeComplete')
   feedbackElement.textContent = feedbackKey
     ? `${prototypeText(locale, feedbackKey)}${feedbackKey === 'delivered' ? ` +${number(lastPayout)}${lastBonus ? ` · ${prototypeText(locale, 'adjacencyBonus')} +${number(lastBonus)}` : ''}` : ''}`
     : ''

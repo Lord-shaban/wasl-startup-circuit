@@ -44,6 +44,38 @@ async function openPrototype(page: Page) {
   await expect(page.locator('#trust-value')).toHaveAttribute('data-value', '0')
 }
 
+test('guides the first action and labels future features in English and Arabic', async ({ page }) => {
+  await openPrototype(page)
+
+  const starterLabel = page.locator('#starter-station-label')
+  const modeHint = page.locator('#mode-hint')
+  const futureTeamBadges = page.locator('.future-team .future-badge')
+  const futureHudValues = page.locator('.hud strong[data-prototype="future"]')
+
+  await expect(starterLabel).toBeVisible()
+  await expect(starterLabel).toHaveText('Product station')
+  await expect(modeHint).toHaveText('Drag the +50 card to the turquoise Product station.')
+  await expect(futureTeamBadges).toHaveCount(2)
+  await expect(futureTeamBadges).toHaveText(['Later', 'Later'])
+  await expect(futureHudValues).toHaveCount(3)
+  await expect(futureHudValues).toHaveText(['Later', 'Later', 'Later'])
+
+  await page.locator('#buy-product').click()
+  await expect(modeHint).toHaveText('Click an empty board cell to place the station')
+  await page.locator('#cancel-action').click()
+
+  await page.getByRole('button', { name: 'Switch to Arabic' }).click()
+  await expect(page.locator('html')).toHaveAttribute('lang', 'ar')
+  await expect(starterLabel).toBeVisible()
+  await expect(starterLabel).toHaveText('محطة المنتج')
+  await expect(modeHint).toHaveText('اسحب بطاقة +50 إلى محطة المنتج الفيروزية.')
+  await expect(futureTeamBadges).toHaveText(['لاحقًا', 'لاحقًا'])
+  await expect(futureHudValues).toHaveText(['لاحقًا', 'لاحقًا', 'لاحقًا'])
+
+  await page.locator('#buy-product').click()
+  await expect(modeHint).toHaveText('انقر خلية فارغة في اللوحة لوضع المحطة')
+})
+
 test('buys a Product station and places it on an open board cell', async ({ page }) => {
   await openPrototype(page)
 
@@ -165,7 +197,7 @@ test('moves a station by clicking its old and new cells without changing cash', 
   await page.mouse.click(destinationCell.x, destinationCell.y)
 
   await expect(page.locator('#cash-value')).toHaveAttribute('data-value', '100')
-  await expect(page.locator('#mode-hint')).toContainText(/drag onto/i)
+  await expect(page.locator('#mode-hint')).toContainText(/drag.*turquoise Product station/i)
   await expect(page.locator('#prototype-feedback')).toContainText(/moved/i)
 })
 

@@ -12,6 +12,7 @@ import { ReferralEffect } from './referral-effect'
 
 export interface BoardView {
   clientToCell(clientX: number, clientY: number): Cell | null
+  cellToClientPoint(cell: Cell): Point
   updatePrototype(state: PrototypeGraphicsState): void
   startReferral(source: Cell, destination: Cell): void
   destroy(): void
@@ -84,6 +85,18 @@ export async function createBoard(
     const rect = app.canvas.getBoundingClientRect()
     if (clientX < rect.left || clientX >= rect.right || clientY < rect.top || clientY >= rect.bottom) return null
     return camera.screenToCell(pointInCanvas(clientX, clientY, app.canvas))
+  }
+
+  const cellToClientPoint = (cell: Cell): Point => {
+    const rect = app.canvas.getBoundingClientRect()
+    const screen = camera.worldToScreen({
+      x: (cell.column + 0.5) * CELL_SIZE,
+      y: (cell.row + 0.5) * CELL_SIZE,
+    })
+    return {
+      x: rect.left + screen.x / app.canvas.clientWidth * rect.width,
+      y: rect.top + screen.y / app.canvas.clientHeight * rect.height,
+    }
   }
 
   const applyCamera = () => {
@@ -196,6 +209,7 @@ export async function createBoard(
     app.renderer.resize(nextWidth, nextHeight)
     camera.resize(nextWidth, nextHeight)
     applyCamera()
+    onPointerCell(hoveredCell, camera.transform.scale)
   })
   resizeObserver.observe(host)
   applyCamera()
@@ -203,6 +217,7 @@ export async function createBoard(
 
   return {
     clientToCell,
+    cellToClientPoint,
     updatePrototype(state) {
       stations = state.stations
       prototypeState = state

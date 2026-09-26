@@ -54,6 +54,7 @@ h1 { margin: 0; font-size: clamp(2rem, 4vw, 3.2rem); line-height: 1.1; }
   font-size: .85rem;
 }
 .stat strong { color: #f4f0df; }
+.stat strong[data-prototype="future"] { color: #8ea9ac; font-size: .75rem; font-weight: 600; }
 .workspace { display: grid; grid-template-columns: minmax(0, 1fr) 16rem; gap: 1rem; }
 
 .board-panel {
@@ -87,6 +88,22 @@ h1 { margin: 0; font-size: clamp(2rem, 4vw, 3.2rem); line-height: 1.1; }
   user-select: none;
 }
 .opportunity-card[hidden] { display: none; }
+.starter-station-label {
+  position: absolute;
+  z-index: 2;
+  margin: 0;
+  padding: .35rem .6rem;
+  border: 1px solid #32c7ba;
+  border-radius: .5rem;
+  background: #143840e8;
+  color: #d6fff5;
+  font-size: .75rem;
+  font-weight: 700;
+  white-space: nowrap;
+  pointer-events: none;
+  transform: translateX(-50%);
+}
+.starter-station-label[hidden] { display: none; }
 .opportunity-card.dragging { cursor: grabbing; box-shadow: 0 1.4rem 2rem #07111dcc; }
 .opportunity-card.processing { transform: scale(.3); opacity: 0; pointer-events: none; transition: left .42s ease-in, top .42s ease-in, transform .42s ease-in, opacity .42s ease-in; }
 .opportunity-card.arriving { animation: referral-arrival .26s ease-out; }
@@ -121,6 +138,8 @@ h1 { margin: 0; font-size: clamp(2rem, 4vw, 3.2rem); line-height: 1.1; }
 .resource strong { color: #f4f0df; font-size: 1.1rem; }
 .team-list { display: grid; gap: .6rem; margin: 0 0 1.5rem; padding: 0; list-style: none; }
 .team-list li { display: flex; align-items: center; gap: .65rem; color: #d6e1e2; }
+.team-list .future-team { opacity: .55; }
+.future-badge { margin-inline-start: auto; color: #b9c9c9; font-size: .68rem; }
 .team-icon { display: grid; width: 2rem; height: 2rem; place-items: center; border-radius: .5rem; font-size: 1.15rem; font-weight: 700; }
 .team-icon.product { background: #1d605f; color: #80f5e6; }
 .team-icon.growth { background: #68402f; color: #ffc190; }
@@ -132,7 +151,7 @@ h1 { margin: 0; font-size: clamp(2rem, 4vw, 3.2rem); line-height: 1.1; }
 .primary-action:hover, .primary-action:focus-visible { background: #227b78; outline-color: #f4f0df; }
 .secondary-action { border: 1px solid #6a8590; background: #243849; color: #f4f0df; }
 .secondary-action[hidden] { display: none; }
-.mode-hint { min-height: 1.5rem; margin: .75rem 0; color: #b9d9d4; font-size: .83rem; line-height: 1.4; }
+.mode-hint { min-height: 1.5rem; margin: .75rem 0; padding: .55rem .65rem; border-inline-start: 3px solid #32c7ba; border-radius: .25rem; background: #1b3942; color: #d8eee9; font-size: .83rem; line-height: 1.4; }
 .delivery-preview { min-height: 1.2rem; color: #f7c792; font-size: .8rem; }
 .prototype-feedback { min-height: 1.2rem; margin-bottom: 1rem; color: #7ee6d6; font-size: .82rem; line-height: 1.4; }
 [lang="ar"] { font-family: 'Segoe UI', Tahoma, sans-serif; }
