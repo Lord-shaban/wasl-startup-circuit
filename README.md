@@ -2,7 +2,7 @@
 
 A short browser strategy game about turning one customer opportunity into a company-wide network of products, referrals, and automation. Play with a mouse in English or Arabic.
 
-> **Current status:** Phase 0 research and planning are complete. Gameplay implementation awaits plan review. There is no playable build yet.
+> **Current status:** Phase 0 and the M1.1 application foundation are complete. The browser shell runs locally; gameplay is not implemented yet. M1.2–M1.5 remain in the web foundation milestone.
 
 ## Game at a glance
 
@@ -20,7 +20,14 @@ The comparison and architecture are in [Technical Design](docs/technical-design.
 
 ## How to run
 
-The application package has not been created. M1 will add `npm install`, `npm run dev`, `npm test`, and `npm run build`. The Phase 0 documents require no local setup.
+Install [Node.js](https://nodejs.org/) and [pnpm](https://pnpm.io/), then run:
+
+```sh
+pnpm install
+pnpm dev
+```
+
+Open the local URL printed by Vite. Use `pnpm typecheck` for TypeScript checks and `pnpm build` for the production bundle. Tests will be added with gameplay systems in later M1 issues.
 
 ## Project structure
 
@@ -34,6 +41,12 @@ docs/
 planning/
   issues.tsv           Reviewable issue specifications
   publish.ps1          Idempotent GitHub planning publisher
+src/
+  sim/                Deterministic game rules (planned)
+  view/               Pixi board renderer (planned)
+  ui/                 Bilingual DOM interface (planned)
+  content/            Data-defined stations and upgrades (planned)
+  platform/           Persistence and audio (planned)
 ```
 
 ## Development workflow
@@ -47,7 +60,7 @@ The [GitHub Project board](https://github.com/users/Lord-shaban/projects/9) is t
 - [Issues](https://github.com/Lord-shaban/wasl-startup-circuit/issues)
 - [Milestone gates and critical path](docs/roadmap.md)
 
-GitHub Actions will build and test each PR. M3 targets the first playable public build. A validated `main` build will deploy to GitHub Pages; no playable URL exists yet.
+GitHub Actions will build and test each PR once M1.5 is complete. M3 targets the first playable public build. A validated `main` build will deploy to GitHub Pages; no playable URL exists yet.
 
 ## Originality and assets
 

@@ -50,4 +50,4 @@ Vitest covers simulation determinism, chain bounds, save migration, and balance 
 
 ## CI/CD and deployment
 
-GitHub Actions will run `npm ci`, typecheck, unit tests, build, and browser smoke checks on PRs. A validated `main` will publish a static playable build to GitHub Pages after the application shell exists. PR builds will retain downloadable artifacts. A dedicated preview URL can be added if hosting permissions and build feedback justify it; it is not promised before verification. Do not present an empty shell as a playable release.
+GitHub Actions will run `pnpm install --frozen-lockfile`, typecheck, unit tests, build, and browser smoke checks on PRs. A validated `main` will publish a static playable build to GitHub Pages after the application shell exists. PR builds will retain downloadable artifacts. A dedicated preview URL can be added if hosting permissions and build feedback justify it; it is not promised before verification. Do not present an empty shell as a playable release.
