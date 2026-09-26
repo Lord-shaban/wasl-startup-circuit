@@ -2,7 +2,7 @@
 
 A short browser strategy game about turning one customer opportunity into a company-wide network of products, referrals, and automation. Play with a mouse in English or Arabic.
 
-> **Current status:** Phase 0 and M1.1–M1.3 are complete. The browser shell, tested simulation kernel, and interactive board grid run locally; gameplay is not implemented yet. M1.4–M1.5 remain in the web foundation milestone.
+> **Current status:** The web foundation and first interaction prototype run locally. Players can buy, place, and move a Product station, then drag one customer opportunity to a station for a single payout. English and Arabic are available from the language switch. Rounds, referrals, automation, and upgrades are later milestones.
 
 ## Game at a glance
 
@@ -44,7 +44,7 @@ planning/
 src/
   sim/                Deterministic kernel and fixed-step clock
   view/               Pixi board renderer and camera
-  ui/                 Bilingual DOM interface (planned)
+  ui/                 Bilingual DOM interface and prototype copy
   content/            Data-defined stations and upgrades (planned)
   platform/           Persistence and audio (planned)
 tests/
@@ -64,7 +64,7 @@ The [GitHub Project board](https://github.com/users/Lord-shaban/projects/9) is t
 - [Issues](https://github.com/Lord-shaban/wasl-startup-circuit/issues)
 - [Milestone gates and critical path](docs/roadmap.md)
 
-GitHub Actions will build and test each PR once M1.5 is complete. M3 targets the first playable public build. A validated `main` build will deploy to GitHub Pages; no playable URL exists yet.
+GitHub Actions verifies pull requests and deploys a successful `main` build to GitHub Pages. See [CI and deployment](docs/ci-deployment.md). M3 targets the first complete round; the current interaction prototype is a short hands-on preview.
 
 ## Originality and assets
 
