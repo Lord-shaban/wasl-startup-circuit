@@ -1,30 +1,30 @@
-# خارطة طريق وَصْل
+# WASL roadmap
 
-اللوحة على GitHub هي مصدر حالة العمل. هذه الصفحة توضح حدود المراحل ومعايير عبورها؛ تفاصيل التنفيذ والاعتماديات داخل الـIssues. لا تُحدد تواريخ إصدار قبل تجربة النموذج الأولي.
+The [GitHub Project board](https://github.com/users/Lord-shaban/projects/9) is the source of truth for work status. This page defines milestone boundaries and exit gates; individual issues carry scope, acceptance criteria, tests, and native blocking links. Dates remain unset until the interaction prototype has been playtested.
 
-| Milestone | النتيجة القابلة للفحص | شرط الانتقال |
+| Milestone | Inspectable result | Exit gate |
 |---|---|---|
-| M0 — Research & planning | دراسة المرجع، المفهوم، الفن، التقنية، لوحة وIssues | كل قرار أساسي موثق والاعتماديات بلا دورة |
-| M1 — Web foundation | صفحة عربية RTL، Canvas، محاكاة منفصلة، CI ونشر هيكلي | تحميل سريع، build/test ناجحان، تشغيل داخل المتصفح |
-| M2 — Interaction prototype | فرصة واحدة، سحب ووضع، محطة، إحالة مرئية | مستخدم جديد يفهم الفعل؛ تفسير واضح لأثر الموضع |
-| M3 — Playable round | مال، مهلة، هدف، نهاية وإعادة جولة؛ أول نسخة قابلة للعب | جولة كاملة من البداية للنهاية واختبار ماوس فقط |
-| M4 — Builds & automation | فروع ترقيات وتآزرات وأتمتة قابلة للتركيب | استراتيجيتان واضحتان دون حلقات إحالة غير محدودة |
-| M5 — Phases & feel | محتوى المراحل والهوية البصرية والصوتية | التصاعد مقروء والأصول متسقة |
-| M6 — Alpha & optimization | أداء، حفظ، توافق، توازن، فحص QA | أهداف الأداء ومخاطر المتصفح مقاسة ومقبولة |
-| M7 — Beta & release | Playtest خارجي محدود، صقل، نشر مستقر | لا عيوب حرجة؛ README ورابط لعب وإصدار ثابت |
+| M0 — Research & planning | Reference study, concept, art/technical decisions, board, and issues | All key decisions documented; dependency graph has no cycle. |
+| M1 — Web foundation | Bilingual shell, board renderer, simulation base, CI | Build and tests pass; both languages render correctly in a browser. |
+| M2 — Interaction prototype | One opportunity, mouse drag and placement, processing, visible referral | First action is understood quickly; position changes outcomes clearly. |
+| M3 — Playable round | Runway, deadline, goal, ending, and retry; first playable build | Complete a round with a mouse from a public URL. |
+| M4 — Builds & automation | Upgrade branches, synergies, and automated routing | Two viable builds and no unbounded referral loop. |
+| M5 — Phases & feel | Later phases, original art and audio | Escalation remains readable and assets remain consistent. |
+| M6 — Alpha & optimization | Performance, saves, compatibility, balance, QA | Browser risks and performance targets measured and accepted. |
+| M7 — Beta & release | External playtest, polish, stable deployment | No critical defects; current README, playable URL, and release build. |
 
 ## Critical path
 
-M0 → M1 محاكاة/واجهة → M2 سحب/موضع/معالجة → M3 جولة كاملة → M4 التخصص والأتمتة → M5 المحتوى والفن → M6 alpha → M7 release. يبدأ تجريب المتعة في M2، قبل بناء شجرة ترقيات واسعة. إذا فشل معيار M2، تُفتح Issue لمعالجة الـcore mechanic وتُوقف Features التابعة.
+M0 → M1 simulation/UI → M2 drag/placement/delivery → M3 complete round → M4 builds and automation → M5 content and feel → M6 Alpha → M7 release. The first fun gate is in M2, before a large upgrade tree. If the core interaction fails that gate, open a focused issue and pause dependent features.
 
-## تعريف الحالة
+## Board states
 
-- **Backlog:** صيغت الفكرة، وقد تكون بعيدة أو غير جاهزة.
-- **Ready:** الاعتماديات منجزة، والـAcceptance Criteria قابلة للاختبار.
-- **In Progress:** عمل جارٍ على Issue واحدة محددة.
-- **Testing:** التنفيذ مكتمل وتحت فحص آلي/في المتصفح.
-- **Done:** تحقق الاختبار والقبول، وربط Commit/PR، وإغلاق الـIssue.
+- **Backlog:** planned or waiting on dependencies.
+- **Ready:** dependencies complete and acceptance criteria are testable.
+- **In Progress:** active work on a bounded issue.
+- **Testing:** implementation complete; automated and browser checks underway.
+- **Done:** acceptance criteria verified, commit/PR linked, issue closed.
 
-## سياسة النطاق
+## Scope guardrails
 
-النسخة القابلة للعب هي M3، وليست وعدًا بكل ميزات M4–M7. لا multiplayer، لا متجر أو مدفوعات، لا حسابات، لا هاتف كمنصة أولى، ولا AI داخل المحاكاة. أي فكرة جديدة تُسجل في Backlog مع سبب وقيمة قبل ضمها إلى Milestone.
+M3 is the first playable version, not a promise of all M4–M7 content. No multiplayer, store or payments, accounts, mobile-first controls, or AI-driven simulation is in the release scope. Record new ideas in Backlog with a reason and priority before scheduling them.

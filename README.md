@@ -1,53 +1,54 @@
-# وَصْل | Wasl: Startup Circuit
+# WASL: Startup Circuit
 
-لعبة استراتيجية تصاعدية قصيرة للمتصفح، تبدأ بمؤسس ومهمة واحدة وتنتهي بشبكة شركة تعمل عبر التآزر وسلاسل الإحالات والأتمتة. الواجهة عربية واتجاهها RTL، والتحكم بالماوس فقط.
+A short browser strategy game about turning one customer opportunity into a company-wide network of products, referrals, and automation. Play with a mouse in English or Arabic.
 
-> **الحالة الحالية:** Phase 0 — البحث والتخطيط. لا يوجد Gameplay أو نسخة قابلة للعب بعد. يبدأ التنفيذ بعد مراجعة الخطة.
+> **Current status:** Phase 0 research and planning are complete. Gameplay implementation awaits plan review. There is no playable build yet.
 
-## الفكرة في سطر
+## Game at a glance
 
-اسحب فرصة عميل إلى فريقك، أوصل المحطات بذكاء، وشاهد كل تسليم ناجح يطلق فرصًا جديدة. ابنِ شركة قادرة على بلوغ هدف الجولة قبل أن ينفد رصيدها.
+Drag a customer opportunity to a workstation. Each successful delivery earns cash and trust, and may generate referrals. Place teams where they reinforce each other, choose a specialization, and build a resilient company before the round's runway expires.
 
-## التقنية المختارة
+## Tech stack
 
-- TypeScript + Vite
-- PixiJS 8 للرسم والمؤثرات داخل Canvas
-- HTML/CSS للواجهة العربية RTL
-- محاكاة حتمية منفصلة عن الرسم، دون فيزياء أجسام عامة في النسخة الأولى
-- Vitest وPlaywright للاختبارات
+- TypeScript and Vite
+- PixiJS 8 for the board and visual effects
+- HTML/CSS for accessible UI, English LTR, and Arabic RTL
+- A deterministic simulation independent of rendering
+- Vitest and Playwright for tests
 
-التفاصيل والمقارنة في [التصميم التقني](docs/technical-design.md).
+The comparison and architecture are in [Technical Design](docs/technical-design.md).
 
-## التشغيل
+## How to run
 
-لم تُضف حزمة التطبيق بعد. ستُضاف في M1 مع الأوامر `npm install` و`npm run dev` و`npm test` و`npm run build`. لا يلزم إعداد محلي للبحث والتخطيط.
+The application package has not been created. M1 will add `npm install`, `npm run dev`, `npm test`, and `npm run build`. The Phase 0 documents require no local setup.
 
-## هيكل المشروع
+## Project structure
 
 ```text
 docs/
-  reference-study.md   دراسة المرجع ومصادرها
-  game-design.md       قواعد اللعبة والـcore loop
-  art-bible.md         الهوية البصرية والحركية والصوتية
-  technical-design.md  قرارات التنفيذ والبدائل
-  roadmap.md           المراحل ومعايير العبور والاعتماديات
+  reference-study.md   Primary-source research and design lessons
+  game-design.md       Rules, loop, progression, and fun gates
+  art-bible.md         Original visual, motion, and audio direction
+  technical-design.md  Stack choice and architecture
+  roadmap.md           Milestones, gates, and critical path
 planning/
-  issues.json          مواصفات الـIssues القابلة للمراجعة
+  issues.tsv           Reviewable issue specifications
+  publish.ps1          Idempotent GitHub planning publisher
 ```
 
-## سير العمل
+## Development workflow
 
-GitHub Project هو لوحة العمل الأساسية. كل Issue تحدد نطاقًا صغيرًا، معيار قبول، اعتماديات، واختبارات. يبدأ العمل من `Ready`، وينتقل إلى `In Progress`، ثم `Testing`، ولا يصبح `Done` إلا بعد اختبار في المتصفح وCommit/Push وربط PR أو Commit بالـIssue. القرارات الجديدة تُسجل في Issue قبل توسيع النطاق.
+The [GitHub Project board](https://github.com/users/Lord-shaban/projects/9) is the source of truth for status. Every issue has a bounded scope, acceptance criteria, dependencies, and tests. Move work through Backlog → Ready → In Progress → Testing → Done. An implementation issue reaches Done only after automated and browser verification, a clear commit, a push, and a linked issue or PR. Log new ideas in Backlog before expanding scope.
 
-## خارطة الطريق والنسخ
+## Roadmap and builds
 
-- [GitHub Project / Board](https://github.com/users/Lord-shaban/projects/9)
+- [Project board](https://github.com/users/Lord-shaban/projects/9)
 - [Milestones](https://github.com/Lord-shaban/wasl-startup-circuit/milestones)
 - [Issues](https://github.com/Lord-shaban/wasl-startup-circuit/issues)
-- [خارطة الطريق](docs/roadmap.md)
+- [Milestone gates and critical path](docs/roadmap.md)
 
-ستنفذ GitHub Actions البناء والاختبارات على كل PR. أول نسخة قابلة للعب متوقعة بعد M3. سيُنشر `main` إلى GitHub Pages بعد إضافة التطبيق والاختبارات اللازمة؛ لم يصدر رابط لعب بعد.
+GitHub Actions will build and test each PR. M3 targets the first playable public build. A validated `main` build will deploy to GitHub Pages; no playable URL exists yet.
 
-## ملكية الأصول
+## Originality and assets
 
-الفكرة والأصول المقترحة أصلية. المرجع مصدر لدروس التصميم فقط. لا تُنسخ منه صور أو أصوات أو شاشات أو نصوص أو أسماء ترقيات.
+WASL uses the reference game only for general design lessons. Its rules, theme, interface, graphics, text, and audio are original. No reference-game asset is copied.

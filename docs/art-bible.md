@@ -1,25 +1,25 @@
-# دليل الفن — وَصْل
+# Art bible: WASL
 
-## الهوية
+## Identity
 
-**مكتب ورقي يتحول إلى خريطة مدينة نابضة.** الكاميرا علوية مائلة قليلًا؛ بطاقات فرص، محطات عمل هندسية، وصلات ضوئية، ومؤشرات صغيرة تشبه ملاحظات وملصقات startup. المشهد حيّ ومبهج من دون استعارة النار أو الشمس أو خط الحروف أو لوحات المرجع.
+**A paper desk growing into a pulsing city diagram.** The slightly angled top-down board contains opportunity cards, geometric workstations, luminous connectors, and startup-style notes and labels. The result is energetic and playful without borrowing the reference game's fire, Sun, silhouettes, typography, or panels.
 
-## القواعد البصرية
+## Visual rules
 
-- خلفية كحلية حبرية `#101C2B` وشبكة خافتة `#25384A`، مع مساحات تنفس كبيرة.
-- الفرص بلون عاجي `#F4F0DF`؛ المنتج فيروز `#32C7BA`؛ النمو برتقالي مرجاني `#F4995C`؛ العمليات بنفسجي `#AE91ED`؛ الخطر أحمر `#E26569`.
-- حدود 2–3px، أشكال مستديرة بسيطة، ظلال محدودة. العلامات العربية تبقى DOM ولا تُخبز داخل sprites حتى تظل مقروءة وقابلة للترجمة.
-- كل نوع محطة له silhouette ورمز مختلف. لا نعتمد على اللون وحده.
-- الترقية تغير **الشكل أو السلوك المرئي**: مخرج جديد، ذراع توجيه، خط أكثر نشاطًا، أو طبقة تشغيل جديدة. حجم الرقم وحده لا يكفي.
+- Ink-navy background `#101C2B` and restrained grid `#25384A`, with generous negative space.
+- Ivory opportunities `#F4F0DF`; turquoise Product `#32C7BA`; coral Growth `#F4995C`; violet Operations `#AE91ED`; red risk `#E26569`.
+- Rounded simple shapes, 2–3px outlines, limited shadows. English and Arabic labels stay in DOM rather than being baked into sprites.
+- Every workstation type has a distinct silhouette and icon. Color is a secondary signal.
+- An upgrade changes a **visible form or behavior**: a new outlet, routing arm, active connection, or operating layer. A larger number alone is insufficient.
 
-## الحركة والـVFX
+## Motion and visual effects
 
-الفعل سببي على ثلاث نبضات: وصول (150–250ms)، معالجة (pulse)، ثم خروج/إحالة (trail). السلسلة الطويلة تُظهر ترتيب الأحداث بوضوح؛ تتجمع الإحالات المتزامنة بصريًا في مسار واحد عند الكثافة العالية. لا يهتز كامل المشهد كل مرة. الحد الأقصى للمؤثرات الحية قابل للقياس والتعديل. الحركة البيئية هادئة؛ الاندفاع البصري محفوظ للإنجازات.
+Show causal action in three beats: arrival (about 150–250ms), processing pulse, then delivery/referral trail. Long chains reveal event order. At peak density, simultaneous referrals can share a visual route while remaining separate simulation events. Keep ambient motion quiet. Save large effects for milestones, and cap live visual effects with a measurable budget.
 
-## الصوت
+## Audio
 
-طبقات صوتية قصيرة أصلية: سحب ورقي، تثبيت محطة، نبضة تسليم، ورنين سلسلة. سقف لعدد الأصوات المتزامنة ومفتاح كتم واضح. لا نستخدم SFX أو موسيقى المرجع.
+Original short layers: paper pickup, station placement, delivery pulse, and chain chime. Limit simultaneous voices and provide clear mute and volume controls. Do not use reference-game sounds or music.
 
-## الإنتاج والاتساق
+## Production and consistency
 
-ابدأ بأشكال vector أصلية وsprite atlas صغير. أي صورة مولدة لاحقًا تُراجع وفق اللوحة، السماكة، المنظور، وقابلية القراءة عند حجم اللعبة. تُسجل أصولها ومصدرها ورخصتها في `assets/ATTRIBUTION.md` عند إضافتها. لا تُنتج حزمة واسعة قبل اعتماد نموذج بصري صغير قابل للعب.
+Start with original vector forms and a small sprite atlas. Review any generated image against palette, line weight, perspective, and readability at actual game size. Record source and license in `assets/ATTRIBUTION.md` when assets are added. Do not produce a large asset set before a small visual prototype is approved.

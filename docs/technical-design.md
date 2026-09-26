@@ -1,53 +1,53 @@
-# التصميم التقني — وَصْل
+# Technical design: WASL
 
-## اختيار الـstack
+## Stack decision
 
-**TypeScript + Vite + PixiJS 8 + HTML/CSS RTL.** Pixi يرسم شبكة المحطات وحركة الفرص والمؤثرات بـWebGL، بينما تبقى النصوص والأزرار العربية في DOM. المحاكاة نفسها TypeScript حتمية مستقلة عن الرسم، ولا تستخدم محرك فيزياء أجسام في النسخة الأولى. هذا لأن سؤال اللاعب هو تدفق العمل وموضع المحطات، لا ارتداد أجسام.
+Choose **TypeScript + Vite + PixiJS 8 + HTML/CSS**. Pixi renders workstation networks, moving opportunities, and effects with WebGL. Accessible English and Arabic text, buttons, and upgrade panels stay in DOM. A deterministic TypeScript simulation owns gameplay state. No general rigid-body physics engine is planned for the first version: the interesting decisions are workflow and placement, not collision realism.
 
-| خيار | القوة | سبب القرار |
+| Option | Strength | Decision |
 |---|---|---|
-| Canvas 2D خام | أقل حزمة وأعلى تحكم | إدارة المشاهد والـbatching والمؤثرات ستستهلك وقت النموذج الأولي |
-| PixiJS 8 | رسم 2D سريع، أحداث ماوس، تحكم دقيق في الحجم | **مختار** لشبكة كثيفة ومؤثرات متصاعدة مع واجهة عربية DOM |
-| Phaser | إطار ألعاب كامل مع Arcade/Matter physics | جيد إذا أصبحت الفيزياء محور اللعب؛ عبء مفاهيم Scene/physics زائد لفكرة شبكة التدفق الحالية |
-| Godot Web | أدوات محرر وإنتاج قوية | تصدير Web يحتاج WebAssembly/WebGL2، ويزيد تعقيد تسليم لعبة خفيفة ومزج واجهة DOM |
-| Unity Web | منظومة إنتاج غنية والمرجع نفسه استخدم Unity في demo الويب | غير متناسب مع أولوية تحميل خفيف وتحكم Arabic DOM دقيق؛ ليس حكمًا على جودة المرجع |
+| Raw Canvas 2D | Minimal dependency and total control | Rebuilding batching, scene management, and effects would slow the first prototype. |
+| PixiJS 8 | Fast 2D rendering, pointer events, precise bundle control | **Selected** for a dense network board beside a DOM-based bilingual UI. |
+| Phaser | Full browser-game framework with Arcade and Matter physics | Attractive if physics becomes central; more scene and physics machinery than this network simulation needs. |
+| Godot Web | Strong editor and content pipeline | WebAssembly/WebGL2 delivery and DOM integration complicate the lightweight browser-first goal. |
+| Unity Web | Mature production ecosystem; the reference's browser demo uses Unity | Less suitable for our initial-load and bilingual DOM priorities, without implying a weakness in the reference game. |
 
-المقارنة مبنية على [توثيق PixiJS للرسم](https://pixijs.com/8.x/guides/components/renderers)، [توثيق Phaser](https://docs.phaser.io/) و[أنظمة الفيزياء فيه](https://docs.phaser.io/phaser/concepts/physics)، [توثيق Godot Web](https://docs.godotengine.org/en/4.5/tutorials/export/exporting_for_web.html)، و[توثيق Unity Web](https://docs.unity3d.com/Manual/webgl-building.html). سنثبت النسخ الفعلية في `package-lock.json` عند M1.
+Sources: [PixiJS renderer guide](https://pixijs.com/8.x/guides/components/renderers), [Phaser overview](https://docs.phaser.io/) and [physics guide](https://docs.phaser.io/phaser/concepts/physics), [Godot web export guide](https://docs.godotengine.org/en/4.5/tutorials/export/exporting_for_web.html), and [Unity web build guide](https://docs.unity3d.com/Manual/webgl-building.html). Actual dependency versions will be pinned in M1.
 
-## حدود الأنظمة
+## System boundaries
 
 ```text
-Pointer + DOM controls
-         ↓ commands
-Game simulation (fixed timestep, seeded RNG, rules)
-         ↓ events + immutable view model
+Pointer input and HTML controls
+            ↓ commands
+Deterministic simulation: fixed tick, seeded RNG, rules
+            ↓ events and read-only view model
 Pixi board renderer + DOM HUD + audio cue manager
-         ↓
-Versioned local save / telemetry for local playtests
+            ↓
+Versioned local save and local playtest measurements
 ```
 
-مجلدات مقترحة: `src/sim` للقواعد والتوقيت والسلاسل، `src/view` للرسم، `src/ui` للـRTL، `src/content` للمحطات والترقيات المعرّفة كبيانات، `src/platform` للحفظ والصوت، `tests` للاختبارات. لا API أو تسجيل حساب في النسخة الأولى.
+Proposed folders: `src/sim` for rules, `src/view` for rendering, `src/ui` for bilingual DOM, `src/content` for data-defined workstations and upgrades, `src/platform` for persistence and audio, and `tests` for verification. No account or backend is required for the first release.
 
-## المحاكاة والمدخلات
+## Input, simulation, and rendering
 
-- خطوة ثابتة (مبدئيًا 30 tick/s)، rendering مستقل حتى 60fps؛ seed لإعادة سيناريوهات الاختبار.
-- طابور أحداث محدود لكل tick، حدود لتوالد الإحالات، وأولوية ثابتة لمعالجة الفرص؛ لا حلقات لا نهائية عند تركيب تآزرات.
-- Pointer Events: سحب وإفلات، نقر، وعجلة ماوس؛ وضعية mouse-only تُختبر صراحةً. لا استخدام إلزامي للوحة المفاتيح. Canvas يلتقط الإحداثيات بعد تحويل camera/zoom، وDOM يعالج أزرار الواجهة.
-- الفيزياء البصرية مقتصرة على easing ومسارات bezier؛ ليست مصدرًا لقرار اللعبة.
+- Fixed simulation tick, initially 30Hz, independent of rendering up to 60fps. Seeded scenarios make balance and bug reports reproducible.
+- A bounded event queue, referral-generation limit, and stable processing order prevent endless loops from combined synergies.
+- Pointer Events support drag/drop, click, and wheel zoom. The full run must work with a mouse alone. Convert canvas coordinates through camera and zoom before picking a grid cell.
+- Easing and curved paths provide tactile motion, but visual motion does not determine gameplay results.
 
-## حفظ وتعريب وأصول وصوت
+## Localization, save, assets, and audio
 
-- `localStorage` لحفظ الإعدادات، فتحات الـmeta، وجولة قابلة للاستئناف. صيغة versioned مع migration بسيطة؛ export/import JSON يضاف فقط إن بررته اختبارات المستخدم.
-- `lang="ar" dir="rtl"` من أول صفحة. النصوص في قاموس واحد، `Intl.NumberFormat('ar-EG')` حيث يحسن القراءة، واختبار اتجاه الأرقام والعلامات المختلطة. لا تُرسم العربية داخل Canvas إلا بعد إثبات حاجة فعلية.
-- SVG/PNG/WebP أصلية مضغوطة في atlas صغير. تحميل تدريجي؛ المشهد الأول لا ينتظر مؤثرات المراحل المتأخرة.
-- Web Audio API مع بدء بعد أول تفاعل، pooling للأصوات القصيرة، وكتم وحجم محفوظان.
+- English and Arabic strings live in one typed catalog. Set `lang` and `dir` on the root and update them live on language change. Use `Intl.NumberFormat` by locale; test mixed-direction numbers and terms. Persist language selection.
+- Versioned `localStorage` stores settings, persistent unlocks, and a resumable run. Migrations handle old saves and invalid data without duplicate rewards.
+- Original SVG/PNG/WebP graphics use a compact atlas and staged loading. The opening scene does not wait for late-phase assets.
+- Web Audio starts after first user interaction, pools short sounds, and persists mute/volume settings.
 
-## الأداء والاختبار
+## Performance and testing
 
-موازنة أولية للاختبار على لابتوب متوسط: أول تحميل مضغوط تحت 2MB قدر الإمكان، 60fps عند المشهد العادي، لا تقل عن 30fps في ذروة المرحلة الرابعة، وحدود صريحة للأجسام والمؤثرات الحية. هذه أهداف تُقاس في M6، وليست ضمانات مبكرة. Pixi WebGL هو المسار الأساسي؛ تعرض رسالة توافق واضحة إذا فشل تهيئة الرسم.
+Initial targets for a mid-range laptop: approximately 2MB or less compressed first-load transfer where feasible, 60fps in an ordinary scene, and at least 30fps in the final phase. These are measurement targets for M6, not untested promises. WebGL is the primary renderer; failure should show a clear compatibility message.
 
-Vitest لقواعد المحاكاة، منع الحلقات، الحفظ، وتوازن السلاسل. Playwright لمسار بدء الجولة والتفاعل بالماوس والتعريب والحفظ. فحص يدوي بصري في Chrome/Edge/Firefox desktop ونوافذ قياسية. كل Issue جديدة تحدد اختبارها المطلوب.
+Vitest covers simulation determinism, chain bounds, save migration, and balance scenarios. Playwright covers starting a run, mouse-only actions, bilingual direction changes, and persistence. Manual visual checks cover desktop Chrome, Edge, and Firefox at representative window sizes. Each implementation issue states its required test.
 
-## CI/CD والنشر
+## CI/CD and deployment
 
-GitHub Actions: `npm ci` → typecheck → unit tests → build → browser smoke على PR. ينشر `main` نسخة ثابتة إلى GitHub Pages بعد توافر shell قابل للعب؛ PR يرفع artifact قابلًا للتنزيل، ويمكن إضافة preview URL لاحقًا عبر منصة استضافة إذا لزم. لا نعد برابط Preview قبل إثبات صلاحيات الاستضافة. لا يتم نشر نسخة غير قابلة للعب بوصفها لعبة.
+GitHub Actions will run `npm ci`, typecheck, unit tests, build, and browser smoke checks on PRs. A validated `main` will publish a static playable build to GitHub Pages after the application shell exists. PR builds will retain downloadable artifacts. A dedicated preview URL can be added if hosting permissions and build feedback justify it; it is not promised before verification. Do not present an empty shell as a playable release.

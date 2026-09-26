@@ -1,47 +1,47 @@
-# دراسة المرجع: My Fire Is Bigger Than Yours
+# Reference study: My Fire Is Bigger Than Yours
 
-تاريخ الفحص: 26 سبتمبر 2026. هذه دراسة لفلسفة التصميم والإحساس، وليست مواصفة لإعادة إنتاج اللعبة.
+Research date: 26 September 2026. This study extracts design principles and game feel, not content to reproduce.
 
-## الأدلة وحدودها
+## Sources and limits
 
-فُحصت [صفحة Steam الرسمية](https://store.steampowered.com/app/4428630/My_Fire_Is_Bigger_Than_Yours/)، لقطاتها، والمعاينة المتحركة؛ و[صفحة الـdemo على itch.io](https://amarravi.itch.io/my-fire-is-bigger) وشاشة بدايتها؛ و[سجل مارس 2026](https://amarravi.itch.io/my-fire-is-bigger/devlog/1466736/demo-20-is-live-strategic-gameplay-update) و[سجل يونيو 2026](https://amarravi.itch.io/my-fire-is-bigger/devlog/1545349/flip-spawners-new-upgrade-tree-updated-visuals) للمطوّر. انطلقت نسخة HTML5 وظهرت قائمتها الرئيسية، لكن التفاعل داخل Canvas لم يستجب في جلسة الفحص؛ لذلك لا أنسب ملاحظات التحكم الدقيقة إلى تجربة لعب كاملة. تفاصيل الـlate game مأخوذة من المواد الرسمية، لا من لعب مباشر.
+I inspected the [official Steam page](https://store.steampowered.com/app/4428630/My_Fire_Is_Bigger_Than_Yours/), its screenshots and animated trailer frames; the [browser demo on itch.io](https://amarravi.itch.io/my-fire-is-bigger) and its main menu; and the developer's [March strategic update](https://amarravi.itch.io/my-fire-is-bigger/devlog/1466736/demo-20-is-live-strategic-gameplay-update) and [June layout and visual update](https://amarravi.itch.io/my-fire-is-bigger/devlog/1545349/flip-spawners-new-upgrade-tree-updated-visuals). The HTML5 demo loaded, but canvas interaction did not respond in this inspection session. I therefore distinguish direct visual observations from descriptions and do not claim a complete hands-on playthrough. Later-stage details come from official material.
 
 ## Design DNA
 
-1. **فعل أولي مفهوم فورًا:** رمي شيء في النار يجعل النتيجة مرئية بلا شرح طويل.
-2. **سلسلة سببية مرئية:** جسم يشتعل، ينقل التأثير، يولد عائدًا، فتتحسن القدرة على الرمي والاحتراق.
-3. **تحوّل الوظيفة مع النمو:** اللاعب ينتقل من فعل يدوي متكرر إلى اختيار نوع الوقود، موقع الـspawner، ثم بناء ترتيب مؤتمت.
-4. **مسرحة التصاعد:** نار صغيرة في مساحة مظلمة، ثم اتساع هائل في الحجم، الضوء، الجسيمات، الأرقام، والتهديد. صفحة Steam تصف ثلاث مراحل، منها انتقال إلى القمر، وأكثر من 200 ترقية.
-5. **ضغط يختبر البناء:** المطر/الشمس يخلقان سببًا للبحث عن متانة، وليس فقط زيادة أرقام. العرض الرسمي يذكر منافسة الشمس؛ التفاصيل الزمنية الدقيقة للجولات غير موثقة هنا.
-6. **إعادة التجربة عبر الاختيارات:** المطوّر أعاد تصميم demo 2.0 لتحسين وضوح الهدف وتنوع الـbuilds وقيمة الخيارات السابقة.
+1. **An instantly legible first action.** Throwing an object toward a small fire yields visible feedback without lengthy onboarding.
+2. **Visible causality.** Contact leads to burning, spread, income, and stronger future reactions.
+3. **A shift in the player's job.** Manual throwing gives way to fuel choice, spawner layout, build specialization, and automation.
+4. **Theatrical escalation.** A small bright focal point in a dark scene expands dramatically in scale, light, event density, and stakes. Steam describes three phases and more than 200 upgrades.
+5. **Pressure that tests a build.** Rain and the Sun provide reasons to seek resilience alongside growth. Exact round timing is not established by the inspected sources.
+6. **Replay through meaningful choices.** The developer reports redesigning demo 2.0 for a clearer goal, stronger strategic choices, and distinct builds.
 
-## ملاحظات بصرية وحركية مباشرة
+## Direct visual and motion observations
 
-- اللقطات تعرض خلفية بنفسجية/داكنة هادئة، مركزًا شديد السطوع، وأجسامًا مسطحة القراءة تحيط بمنطقة الفعل. التباين يوجه النظر إلى التفاعل.
-- النار مرسومة بكتل لونية عالية التشبع وحدود واضحة؛ تكبر وتتبدل باستمرار بدل الاعتماد على عداد مجرد.
-- الأسهم/الخطوط/التأثيرات المتفرعة وأرقام المكافأة الملونة تجعل سبب المكسب مرئيًا أثناء السلسلة.
-- واجهة الـdemo الرئيسية تستخدم أزرارًا كبيرة وحالات لونية واضحة. لقطة Steam المتأخرة تُظهر تزايد كثافة العناصر، لذا تحتاج لعبتنا إلى سقف واضح للفوضى المقروءة.
-- أعلن المطوّر في يونيو أن الـspawners تتفاعل مع ضوء النار، وأن أرقام المكافآت وسلاسل البرق حصلت على Feedback مختلف. هذا يربط الأنظمة ببعضها بصريًا وسمعيًا.
+- Screenshots place a high-contrast, bright, changing centerpiece against a restrained dark violet environment. This keeps the action readable as density grows.
+- The fire uses bold color blocks, strong silhouettes, and persistent movement. Growth is embodied in the scene rather than expressed only by a counter.
+- Branching effects and colored reward numbers make chain reactions and payoff visible at their source.
+- The demo menu uses large color-coded buttons. Later Steam imagery becomes much busier, which makes readability at peak density a design problem.
+- In the June devlog, the developer says spawners respond to fire light and that bonus pop-ups and lightning-chain sound received distinct feedback. The game connects systems through synchronized visual and audio cues.
 
-## دروس اللعب والـupgrades
+## Gameplay lessons
 
-| محور | ما تدعمه المصادر | ما نستخلصه |
+| Topic | Evidence | Lesson for WASL |
 |---|---|---|
-| إدخال الماوس | سحب/رمي أشياء، ترتيب spawners ومسارات ظاهرة في devlog | اجعل الأثر المتوقع لموضع الماوس ظاهرًا قبل الإفلات |
-| Placement | ترتيب الـspawners واتجاهها مؤثران على المسار | يجب أن يغير الموقع الأداء بشكل مفهوم |
-| Upgrade tree | أكثر من 200 ترقية رسميًا؛ عرض كل العقد دفعة واحدة في تحديث يونيو | وفرة الخيارات لا تبرر شجرة مربكة؛ اجعل الفروع قابلة للقراءة |
-| Synergies | Steam يؤكد التخصص، التفاعلات المتسلسلة، والـautomated layout | كل فرع يحتاج تآزرًا محسوسًا مع فرعين آخرين |
-| Round/retry | الـdemo يغطي التصعيد الأول؛ المصدر الرسمي يصف مراحل وهدفًا واضحًا | نستخدم جولات قصيرة وأهدافًا واضحة، لكن مدة الجولة الدقيقة فرضية تصميمية لنا |
-| Physics | اللعبة موصوفة رسميًا بأنها physics-based | نستفيد من الإحساس المادي والسببية؛ لعبتنا تستخدم شبكة تدفق لا فيزياء حريق |
+| Mouse input | The developer describes moving spawners and live trajectory previews. | Show the expected effect before a drop or rotation. |
+| Placement | Spawner position and direction influence trajectories. | A placed unit must change outcomes for a reason the player can see. |
+| Upgrade tree | Steam advertises 200+ upgrades; the June update shows all nodes in a more stable view. | More choices require clearer grouping and stronger visual explanations. |
+| Synergy | Steam explicitly mentions specialization, cascading reactions, and automated layouts. | Each branch should combine meaningfully with another branch. |
+| Phases | The demo covers the first escalation; Steam describes three phases. | Teach one new layer when the current system creates a need for it. |
+| Physics | The official description calls the game physics-based. | Preserve tactile cause and effect, but use an original workflow-network simulation. |
 
-## منحنى الصعوبة والتوقيت
+## Difficulty and pacing
 
-البداية تعرض فعلًا واحدًا ومردودًا واضحًا؛ ثم تضيف عائقًا وبناءً متخصصًا؛ ثم أتمتة وتفاعلات مركبة. التحديث الاستراتيجي في مارس دليل على أن نمو المحتوى وحده لم يكن كافيًا؛ كان مطلوبًا هدف أوضح وخيارات أكثر معنى. لذلك سنقيس أول نموذج أولي وفق: فهم الفعل خلال 10 ثوانٍ، ظهور أول سلسلة خلال 3 دقائق، وأول قرار layout مؤثر خلال 5 دقائق. هذه **أهداف تصميمية للعبتنا** وليست قياسات من المرجع.
+The reference begins with a single meaningful action, then introduces constraints and specialized builds, and finally supports complex automation. The March devlog is important evidence that simply adding content was insufficient: the goal and build choices needed to become clearer. WASL's proposed test targets are comprehension of the first action within 10 seconds, the first visible chain within three minutes, and a meaningful placement choice within five minutes. These are **WASL design hypotheses**, not measured properties of the reference.
 
-## الأداء: استنتاجات لا ادعاءات عن التنفيذ الداخلي
+## Performance: inference, not an implementation claim
 
-لا تكشف المصادر الرسمية كيف ينفذ المرجع pooling أو batching أو حدود المحاكاة. ما نتعلمه هو خطر كثافة الجسيمات/الأرقام والأجسام المتفاعلة بصريًا. سنضع حدودًا للأجسام الحية وVFX، ونستخدم تجميع رسم ومؤثرات غير مؤثرة على نتيجة المحاكاة، مع profiling في المتصفح. لا ننسب هذه التقنيات للمطوّر.
+Official sources do not describe the reference game's internal pooling, batching, or simulation limits. The visible density of particles, reward numbers, and reacting objects does show the need to budget them in a browser game. WASL will cap live objects and visual effects, separate effects from simulation outcomes, and profile peak scenes. These are our proposed techniques, not claims about the developer's implementation.
 
-## ما سنستلهمه وما سيبقى أصليًا
+## Inspiration boundary
 
-نستلهم سهولة الفعل الأول، انتقال اللاعب إلى بناء منظومة تعمل أمامه، خيارات تآزر تقود إلى نتائج مرئية، وتصاعدًا ذا مراحل. لعبتنا عن **تدفق فرص العملاء بين فرق شركة ناشئة**. سنصمم شبكة محطات وعلاقات إحالة، تحديات سيولة وثقة، واجهة عربية، رسومًا هندسية ومخططات نابضة؛ لا نار، شمس، مطر، رمي وقود، cult، أو أصول مرئية/صوتية/نصية من المرجع.
+We adopt the first-action clarity, visible chains, a growing system, meaningful build choices, and staged escalation. WASL instead models **customer opportunities flowing through a startup's teams**. It uses workstations, referrals, runway, trust, English/Arabic UI, and an original diagram-like visual language. It will not reuse fire, the Sun, rain, fuel throwing, cults, reference-game text, upgrade names, images, or sounds.

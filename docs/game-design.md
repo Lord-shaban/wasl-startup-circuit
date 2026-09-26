@@ -1,64 +1,68 @@
-# تصميم اللعبة — وَصْل
+# Game design: WASL
 
-## الفانتازيا والوعد
+## Fantasy and promise
 
-ابدأ بشخص واحد ينفذ طلب عميل. بعد عدة دقائق يصبح المكتب شبكة حية: بحث يهيئ فكرة، منتج يصنع حلًا، تسويق يضخ فرصًا، ودعم يحول نجاح العميل إلى إحالات جديدة. النجاح يُرى في حركة الفرص والروابط، لا في عداد المال وحده.
+Start as one founder delivering one customer request. Minutes later, watch a living company network: research shapes ideas, product teams deliver solutions, growth brings opportunities, and support turns customer success into referrals. Progress is visible in moving opportunities and connections, not just in a money counter.
 
-## فعل واحد، ثم نظام
+## First action and board
 
-لوحة اللعبة شبكة 2D ذات خلايا قليلة. تظهر **بطاقة فرصة** على حافة اللوحة. يسحبها اللاعب بالماوس إلى محطة «منتج»؛ تمر عبرها، تربح الشركة مالًا وثقة، ويعود جزء من النجاح كفرص جديدة. يمكن النقر لاختيار/شراء/تدوير محطة، السحب لوضعها، والتمرير لتقريب اللوحة. كل شيء قابل للإنجاز بالماوس؛ لا اختصارات إلزامية. إنقاذ طلب عالق أو توجيه فرصة ثمينة يبقي للماوس دورًا بعد ظهور الأتمتة.
+An opportunity card arrives at the edge of a small 2D board. Drag it to a Product workstation with the mouse. Delivery earns cash and trust; some success returns as a new referral. Later, the mouse selects, buys, places, and rotates stations, and its wheel zooms the board. No keyboard action is required. Manual intervention remains useful for a valuable or delayed opportunity after automation appears.
 
-## القواعد الأساسية
+## Core rules
 
-- لكل فرصة قيمة، مهلة، واحتياج واحد واضح في البداية. لاحقًا تظهر أنواع متعددة.
-- للمحطة مدخلات ومخرجات، قدرة معالجة، ونطاق جوار. يظهر المسار المتوقع قبل وضعها.
-- الترتيب مهم: الجوار يمنح bonus مفهومًا، والروابط تحدد أين تتدفق الفرص. لا تعتمد المحاكاة على تصادم فيزيائي عشوائي.
-- نجاح التسليم يولد مالًا وثقة؛ إحالات العملاء تنشئ فرصًا لاحقة. توجد حدود للسلاسل حتى لا تتحول إلى انفجار حسابي لا يُقرأ.
-- السيولة تنقص بسبب تكاليف التشغيل. عندما تصل إلى الصفر بعد مهلة إنقاذ قصيرة تنتهي الجولة. هدف المرحلة هو بلوغ مؤشر أثر/ثقة محدد قبل موعد السوق.
+- An opportunity has value, a deadline, and one obvious need at first. More types arrive in later phases.
+- A workstation has inputs, outputs, capacity, and adjacency range. Preview its expected connections before placement.
+- Position matters: neighbors create legible bonuses, while directed links route opportunities. Simulation outcomes do not depend on random physical collisions.
+- Delivery generates cash and trust; referrals generate later opportunities. Explicit chain budgets prevent unreadable or unbounded cascades.
+- Operating costs consume runway. A brief recovery window follows cash exhaustion, then the run ends. Each phase also has a visible trust/impact target before a market deadline.
 
 ## Core loop
 
-استقبل فرصة ← وجّهها/ضع محطة ← شاهد المعالجة والتآزر والإحالات ← اربح ← اختر ترقية أو محطة ← واجه ضغط السوق ← أكمل هدف المرحلة أو أعد المحاولة بخبرة محدودة.
+Receive an opportunity → route it or place a station → watch processing, synergy, and referrals → earn → choose a station or upgrade → respond to market pressure → reach the phase goal or retry with a limited persistent unlock.
 
-الجولة المستهدفة مبدئيًا 12–20 دقيقة. اختبار النموذج الأولي هو الذي يثبت المدة؛ لن تتحول إلى التزام إنتاجي قبل playtest. فتح المرحلة التالية يزيد أنواع الفرص والأدوات، ولا يعيد تعليم الماوس من الصفر.
+An initial run target is 12–20 minutes, subject to prototype playtests. A phase introduces new opportunity types and tools when the player needs them; it does not restart mouse onboarding.
 
-## المراحل والصعوبة
+## Phases and difficulty
 
-1. **الطاولة:** محطة واحدة، نوع طلب واحد، فعلان: السحب والشراء. الهدف أول سلسلة إحالات صغيرة.
-2. **الفريق:** ثلاث محطات، إدخال الترتيب والجوار والمهل، وظهور خطأ شائع قابل للتصحيح.
-3. **الشبكة:** أدوات توجيه وأتمتة، عقود جماعية، اهتزاز في السوق، واختيارات تخصص متعارضة.
-4. **المدينة:** فروع مترابطة، موجات فرص كبيرة، ضغط السيولة والسعة، ونهاية حملة واضحة.
+1. **Desk:** one workstation and one opportunity type; dragging and a single purchase. Goal: first small referral chain.
+2. **Team:** three workstations, adjacency, capacity, and deadlines; a recoverable common mistake.
+3. **Network:** routing and automation, group contracts, market fluctuations, and mutually exclusive specializations.
+4. **City:** connected branches, large opportunity waves, runway and capacity pressure, and a defined campaign ending.
 
-تُفتح المرحلة عندما تظهر حاجة فعلية للأداة التالية. عقبات السوق معلنة مسبقًا وتختبر البناء؛ لا خسارة مفاجئة بلا إشارة.
+Market pressure is telegraphed. Failure always has an explainable cause. The next tool unlocks after a visible bottleneck creates demand for it.
 
-## الشجرة والتآزر
+## Upgrade tree and synergies
 
-ثلاثة فروع متقاطعة، بحدود 24–36 عقدة عند الإطلاق، توسّع بعد playtest فقط:
+Plan three intersecting branches and roughly 24–36 nodes for release; expansion depends on playtests.
 
-- **المنتج:** جودة، سرعة معالجة، إعادة استخدام الحل. ترقية مرئية: محطة إضافية/شكل وتدفق أوضح.
-- **النمو:** قنوات، إحالات، اختيار الفرص. ترقية مرئية: خطوط اتصال وأثر domino.
-- **العمليات:** فرز، توجيه تلقائي، تخفيف تكلفة، حماية من الضغط. ترقية مرئية: مساعدات تتحرك ومخازن تتبدل.
+- **Product:** quality, throughput, and solution reuse. Affected workstations gain visible outlets or new behavior.
+- **Growth:** channels, referrals, and opportunity selection. Links and referral paths become visibly more active.
+- **Operations:** sorting, automatic routing, lower costs, and pressure resistance. Assistants and storage change on the board.
 
-أمثلة تآزر أولية: «بحث + منتج» يرفع جودة التسليم ويولد إحالة أعلى قيمة؛ «منتج + دعم» يحول عميلًا راضيًا إلى فرصة ثانية؛ «تسويق + عمليات» يوجه الفرص إلى أقرب محطة غير ممتلئة. كل تآزر له مؤشر بصري واحد وtooltip يشرح شرطه. لا نضيف مزايا رقمية غير مرئية كحشو.
+Initial examples: Research + Product yields higher-quality deliveries and more valuable referrals; Product + Support converts a satisfied client into a second opportunity; Growth + Operations directs opportunities to the closest available team. Each synergy has a clear on-board cue and a short explanation. Invisible percentage-only filler is excluded.
 
-## Automation وقرارات اللاعب
+## Automation and active choices
 
-الأتمتة تفك العمل اليدوي تدريجيًا: مجمّع فرص، موزع، ثم مسارات بين الفروع. يجب أن يبقى قرار الترتيب/التخصص مؤثرًا حتى عندما تتوقف الحاجة لسحب كل فرصة. إذا صار اللعب انتظارًا سلبيًا، نعيد تصميم الاختيار أو ضغط المرحلة قبل إضافة محتوى.
+Automation gradually removes repetitive dragging: a collector, a dispatcher, then inter-branch routes. Placement and specialization must remain meaningful once every opportunity no longer needs a manual drag. If observation replaces decision-making, revise the core loop before adding content.
 
-## Retry وMeta progression
+## Retry and persistence
 
-عند خسارة الجولة أو إنهاء مرحلة تظهر لوحة قصيرة: أفضل سلسلة، سبب الاختناق (سعة/مهلة/تكلفة)، وخيار بدء جولة جديدة. تُحفظ فتحات أدوات وقليل من «خبرة المؤسس» لفتح أسلوب جديد، مع سقف يمنع grind إجباري. لا يُحفظ المال بين الجولات. إمكانية إعادة توزيع الفروع في بداية الجولة تدعم التجريب.
+A short results screen shows the best chain, the bottleneck (capacity, deadline, or cost), and a mouse-accessible retry. Phase/tool unlocks and a small capped amount of founder experience persist to open new approaches; cash resets. Players can reallocate branches at the start of a run so experimentation is viable without grind.
 
-## UI/UX والوصول
+## English and Arabic UX
 
-الواجهة HTML عربية RTL، أرقام واضحة، ونصوص قصيرة. اللوحة المرئية تحتل معظم الشاشة؛ شريط أعلى للمال والمهلة والهدف، وشريط جانبي للأدوات وشجرة الترقية. تمييز الأنواع بالأشكال والرموز إضافة إلى اللون. كل عمل يدوي له hit target كبير، preview قبل الإفلات، وfeedback صوتي/بصري يمكن خفضه. أسماء الأدوات والمقاييس تُختبر مع مستخدم عربي مبكرًا.
+The first screen offers English and Arabic, with browser-language detection as a convenience and an obvious language switch in settings. English uses LTR; Arabic uses RTL. The selected language persists, and switching updates labels, tooltips, numbers, and layout without restarting the run. Gameplay rules and content are the same in both languages. Text belongs in accessible HTML, while the animated board uses language-neutral symbols. Type, shape, and labels distinguish opportunity types beyond color.
 
-## معايير إثبات المتعة
+## Mouse-only and accessibility
 
-- لاعب جديد يفهم أول سحب بلا شرح نصي مطوّل خلال 10 ثوانٍ.
-- أول سلسلة سبب/نتيجة مرئية خلال 3 دقائق.
-- يستطيع اللاعب تفسير لماذا نجح ترتيبان بشكل مختلف.
-- قرارات الفرع تغير سلوك الشبكة، وتسمح باستراتيجيتين صالحَتين على الأقل.
-- بعد فشل الجولة يستطيع اللاعب تسمية تعديل واحد يريد تجربته.
+Use large pointer targets, a drop preview, clear valid/invalid placement states, and adjustable audio/effect intensity. A top bar shows runway, time, and goal; a side panel houses tools and upgrades. Test mixed-direction numbers and Latin terms in Arabic. Any keyboard support is optional, never required for completion.
 
-هذه معايير playtest، لا ادعاء بأن اللعبة حققتها بالفعل.
+## Fun gates
+
+- A new player understands the first drag within 10 seconds without a long tutorial.
+- A traceable cause-and-effect chain appears within three minutes.
+- A player can explain why two layouts perform differently.
+- Two distinct upgrade paths produce viable strategies.
+- After failure, a player can name one change they want to try.
+
+These are playtest criteria, not claims that the game already satisfies them.
